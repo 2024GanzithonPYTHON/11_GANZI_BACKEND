@@ -24,6 +24,6 @@ public class UserController {
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping("/login")
     public ResponseTokenDto logIn(@RequestBody LoginClientDto dto) {
-        return userService.logIn(dto)
+        return userService.logIn(dto);
     }
 }
