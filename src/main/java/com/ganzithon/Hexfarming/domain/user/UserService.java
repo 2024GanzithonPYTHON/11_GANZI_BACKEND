@@ -56,19 +56,19 @@ public class UserService {
 
     private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
         if (password != rePassword) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
     }
 
     private void validateUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다.");
         }
     }
 
     private void validateNickname(String nickname) {
         if (userRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다.");
         }
     }
 
