@@ -39,6 +39,8 @@ public class UserService {
                 .nickname(dto.getNickname())
                 .build();
         userRepository.save(newUser);
+
+        String accessToken =
     }
 
     private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
