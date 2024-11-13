@@ -11,7 +11,7 @@ public class PasswordEncoderManager {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    private String encode(String rawPassword) {
+    public String encode(String rawPassword) {
         return this.passwordEncoder.encode(rawPassword);
     }
 }

@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.domain.user;
 
 import com.ganzithon.Hexfarming.dto.SignUpClientDto;
 import com.ganzithon.Hexfarming.dto.SignUpServerDto;
+import com.ganzithon.Hexfarming.utility.PasswordEncoderManager;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,9 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service // Service 클래스(로직을 처리)임을 알려줌
 public class UserService {
+    private final UserRepository userRepository;
+    private final PasswordEncoderManager passwordEncoderManager;
 
-    @Autowired
-    UserRepository userRepository; // UserRepository 의존성 주입 -> UserService에서 사용 가능
+    @Autowired // Bean으로 관리하고 있는 객체들을 자동으로 주입해줌
+    public UserService(UserRepository userRepository, PasswordEncoderManager passwordEncoderManager) {
+        this.userRepository = userRepository;
+        this.passwordEncoderManager = passwordEncoderManager;
+    }
 
     @Transactional // DB에 접근한다는 것을 알리는 애너테이션
     public SignUpServerDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
@@ -24,7 +30,7 @@ public class UserService {
         validateNickname(dto.getNickname());
 
         // 비밀번호 암호화(해싱)
-        String hashedPassword = PasswordEncoder;
+        String hashedPassword = passwordEncoderManager.encode(dto.getPassword());
 
         // 새로운 유저를 생성하여 DB에 저장
         User newUser = User.builder()
