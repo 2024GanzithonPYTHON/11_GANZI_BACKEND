@@ -23,4 +23,7 @@ public class User {
 
     private String nickname;
 
+    public int getId() {
+        return this.id;
+    }
 }

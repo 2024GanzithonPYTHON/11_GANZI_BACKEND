@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.domain.user;
 
 import com.ganzithon.Hexfarming.dto.SignUpClientDto;
 import com.ganzithon.Hexfarming.dto.SignUpServerDto;
+import com.ganzithon.Hexfarming.utility.JwtManager;
 import com.ganzithon.Hexfarming.utility.PasswordEncoderManager;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoderManager passwordEncoderManager;
+    private final JwtManager jwtManager;
 
     @Autowired // Bean으로 관리하고 있는 객체들을 자동으로 주입해줌
-    public UserService(UserRepository userRepository, PasswordEncoderManager passwordEncoderManager) {
+    public UserService(UserRepository userRepository, PasswordEncoderManager passwordEncoderManager, JwtManager jwtManager) {
         this.userRepository = userRepository;
         this.passwordEncoderManager = passwordEncoderManager;
+        this.jwtManager = jwtManager;
     }
 
     @Transactional // DB에 접근한다는 것을 알리는 애너테이션
@@ -40,7 +43,14 @@ public class UserService {
                 .build();
         userRepository.save(newUser);
 
-        String accessToken =
+        // Jwt 토큰 생성 후 발급
+        String accessToken = jwtManager.createToken(newUser.getId(), false);
+        String refreshToken = jwtManager.createToken(newUser.getId(), true);
+
+        return SignUpServerDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
