@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.user;
 
+import com.ganzithon.Hexfarming.dto.fromClient.LoginClientDto;
 import com.ganzithon.Hexfarming.dto.fromClient.SignUpClientDto;
 import com.ganzithon.Hexfarming.dto.fromServer.ResponseTokenDto;
 import lombok.extern.slf4j.Slf4j;
@@ -18,5 +19,11 @@ public class UserController {
     @PostMapping("/signup") // /user/signup에 대한 Post 요청을 받겠다
     public ResponseTokenDto signUp(@RequestBody SignUpClientDto dto) { // SignUpClientDto를 요청받아서 SignUpServerDto를 반환함
         return userService.signUp(dto);
+    }
+
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @PostMapping("/login")
+    public ResponseTokenDto logIn(@RequestBody LoginClientDto dto) {
+        return userService.logIn(dto)
     }
 }
