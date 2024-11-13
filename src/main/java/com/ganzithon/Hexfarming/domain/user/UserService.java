@@ -1,12 +1,10 @@
 package com.ganzithon.Hexfarming.domain.user;
 
-import com.ganzithon.Hexfarming.dto.SignUpClientDto;
-import com.ganzithon.Hexfarming.dto.SignUpServerDto;
+import com.ganzithon.Hexfarming.dto.fromClient.SignUpClientDto;
+import com.ganzithon.Hexfarming.dto.fromServer.ResponseTokenDto;
 import com.ganzithon.Hexfarming.utility.JwtManager;
 import com.ganzithon.Hexfarming.utility.PasswordEncoderManager;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +22,7 @@ public class UserService {
     }
 
     @Transactional // DB에 접근한다는 것을 알리는 애너테이션
-    public SignUpServerDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
+    public ResponseTokenDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
         // 입력된 두 패스워드가 같은지 검사
         validateRePasswordIsCorrect(dto.getPassword(), dto.getRePassword());
 
@@ -47,7 +45,7 @@ public class UserService {
         String accessToken = jwtManager.createToken(newUser.getId(), false);
         String refreshToken = jwtManager.createToken(newUser.getId(), true);
 
-        return SignUpServerDto.builder()
+        return ResponseTokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

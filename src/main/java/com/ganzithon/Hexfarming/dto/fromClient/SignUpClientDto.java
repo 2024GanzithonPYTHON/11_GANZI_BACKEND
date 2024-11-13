@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto;
+package com.ganzithon.Hexfarming.dto.fromClient;
 
 import lombok.Getter;
 
