@@ -7,21 +7,25 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtManager jwtManager;
     private final CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
     public JwtAuthenticationFilter(JwtManager jwtManager, CustomUserDetailsService customUserDetailsService) {
         this.jwtManager = jwtManager;
         this.customUserDetailsService = customUserDetailsService;
