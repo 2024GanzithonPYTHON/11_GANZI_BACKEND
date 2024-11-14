@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUserId(int userId) throws UsernameNotFoundException {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findById(userId);
         if (user == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "존재하지 않는 아이디입니다.");
         }

@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.configuration;
 
 import com.ganzithon.Hexfarming.global.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,10 +14,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration // 설정 파일이라는 것을 알리는 애너테이션
 @EnableWebSecurity // WebSecurity를 허용 ?
-@RequiredArgsConstructor
 public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Autowired
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter; // JwtAuthentication이 Bean에 등록되어 있으므로 자동으로 주입됨
     }
