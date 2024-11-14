@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.utility;
 
+import com.ganzithon.Hexfarming.domain.user.CustomUserDetails;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -7,6 +8,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -69,5 +72,9 @@ public class JwtManager {
     public JwtParser getJwtParser() {
         Key key = getSignKey();
         return Jwts.parser().verifyWith((SecretKey) key).build();
+    }
+
+    public Authentication getAuthentication(CustomUserDetails customUserDetails) {
+        return new UsernamePasswordAuthenticationToken(customUserDetails, "", customUserDetails.getAuthorities());
     }
 }

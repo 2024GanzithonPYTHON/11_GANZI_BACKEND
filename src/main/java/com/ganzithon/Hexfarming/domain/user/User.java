@@ -6,8 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Builder // 객체 생성을 쉽게 만들어주는 애너테이션
 @AllArgsConstructor // 생성자 자동 생성
 @NoArgsConstructor // 생성자 자동 생성
@@ -22,12 +24,4 @@ public class User {
     private String password;
 
     private String nickname;
-
-    public int getId() {
-        return this.id;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
 }
