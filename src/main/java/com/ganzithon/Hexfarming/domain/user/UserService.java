@@ -55,7 +55,7 @@ public class UserService {
     }
 
     private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
-        if (password != rePassword) {
+        if (!password.equals(rePassword)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
     }

@@ -45,4 +45,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // Jwt 필터를 적용하지 않을 Endpoint를 작성
+        String path = request.getRequestURI();
+        return path.startsWith("/favicon.ico")
+                || path.startsWith("/user/login")
+                || path.startsWith("/user/signup");
+    }
 }
