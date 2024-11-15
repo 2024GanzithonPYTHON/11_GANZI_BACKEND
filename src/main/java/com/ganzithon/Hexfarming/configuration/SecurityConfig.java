@@ -39,6 +39,8 @@ public class SecurityConfig {
                     authorize
                             .requestMatchers(
                                     "/favicon.ico",
+                                    "/swagger-ui/**",
+                                    "/v3/api-docs/**",
                                     "/user/login",
                                     "/user/signup"
                             ).permitAll() // 위 Endpoint에 해당하는 요청은 토큰 없이도 접근 가능 + JwtAuthenticationFilter.java에서도 추가해 줘야 함
