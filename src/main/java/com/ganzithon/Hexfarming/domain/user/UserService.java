@@ -1,8 +1,10 @@
 package com.ganzithon.Hexfarming.domain.user;
 
-import com.ganzithon.Hexfarming.dto.fromClient.LoginClientDto;
-import com.ganzithon.Hexfarming.dto.fromClient.SignUpClientDto;
-import com.ganzithon.Hexfarming.dto.fromServer.ResponseTokenDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.LoginClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.SignUpClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.ValidateDuplicateUsernameClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ValidateDuplicateDto;
 import com.ganzithon.Hexfarming.utility.JwtManager;
 import com.ganzithon.Hexfarming.utility.PasswordEncoderManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +31,6 @@ public class UserService {
         // 입력된 두 패스워드가 같은지 검사
         validateRePasswordIsCorrect(dto.getPassword(), dto.getRePassword());
 
-        // DB에 해당 username이나 nickname이 동일한 User가 있는지 검증
-        validateUsername(dto.getUsername());
-        validateNickname(dto.getNickname());
-
         // 비밀번호 암호화(해싱)
         String hashedPassword = passwordEncoderManager.encode(dto.getPassword());
 
@@ -52,24 +50,6 @@ public class UserService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-    }
-
-    private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
-        if (!password.equals(rePassword)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    private void validateUsername(String username) {
-        if (userRepository.existsByUsername(username)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다.");
-        }
-    }
-
-    private void validateNickname(String nickname) {
-        if (userRepository.existsByNickname(nickname)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다.");
-        }
     }
 
     public ResponseTokenDto logIn(LoginClientDto dto) {
@@ -93,5 +73,17 @@ public class UserService {
                     .build();
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 잘못되었습니다.");
+    }
+
+
+    public ValidateDuplicateDto validateDuplicateUsername(ValidateDuplicateUsernameClientDto dto) {
+        boolean result = userRepository.existsByUsername(dto.username());
+        return new ValidateDuplicateDto(result);
+    }
+
+    private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
+        if (!password.equals(rePassword)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
     }
 }

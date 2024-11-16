@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto.fromServer;
+package com.ganzithon.Hexfarming.domain.user.dto.fromServer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

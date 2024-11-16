@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto.fromClient;
+package com.ganzithon.Hexfarming.domain.user.dto.fromClient;
 
 import lombok.Getter;
 
