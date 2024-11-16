@@ -38,7 +38,7 @@ public class UserService {
         User newUser = User.builder()
                 .email(dto.email())
                 .password(hashedPassword)
-                .name(dto.name())
+                .nickName(dto.nickName())
                 .build();
         userRepository.save(newUser);
 
@@ -74,8 +74,8 @@ public class UserService {
         return new CheckDuplicateServerDto(result);
     }
 
-    public CheckDuplicateServerDto checkDuplicateName(CheckDuplicateNameClientDto dto) {
-        boolean result = userRepository.existsByName(dto.name());
+    public CheckDuplicateServerDto checkDuplicateNickName(CheckDuplicateNickNameClientDto dto) {
+        boolean result = userRepository.existsByNickName(dto.nickName());
         return new CheckDuplicateServerDto(result);
     }
 
