@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.experience;
 
+import com.ganzithon.Hexfarming.domain.experience.dto.AbilityListServerDto;
 import com.ganzithon.Hexfarming.domain.experience.dto.ExperienceServerDto;
 import com.ganzithon.Hexfarming.domain.experience.util.ExperienceCreator;
 import com.ganzithon.Hexfarming.domain.user.User;
@@ -33,6 +34,12 @@ public class ExperienceService {
                         .map(ability -> ExperienceCreator.create(user, ability, Tier.TIER1_1))
                         .collect(Collectors.toList());
         experienceRepository.saveAll(experiences);
+    }
+
+    public List<AbilityListServerDto> getAbilityList() {
+        return Arrays.stream(Ability.values())
+                .map(AbilityListServerDto::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
