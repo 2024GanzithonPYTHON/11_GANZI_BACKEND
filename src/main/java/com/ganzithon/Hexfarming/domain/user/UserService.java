@@ -12,6 +12,7 @@ import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import com.ganzithon.Hexfarming.global.utility.PasswordEncoderManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -113,5 +114,11 @@ public class UserService {
     public void changeNickname(ChangeNicknameClientDto dto) {
         User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
         nowUser.setNickname(dto.nickname());
+    }
+
+    public void withdraw() {
+        User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
+        userRepository.delete(nowUser);
+        SecurityContextHolder.clearContext();
     }
 }

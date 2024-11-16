@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "중복 이메일 검사", description = "중복된 이메일인지 검사한다\n\n(중복이면 true, 중복이 아니면 false 반환)")
+    @Operation(summary = "중복 이메일 검사", description = "중복된 이메일인지 검사한다.\n\n(중복이면 true, 중복이 아니면 false 반환)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
     })
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "중복 이름 검사", description = "중복된 이름인지 검사한다\n\n(중복이면 true, 중복이 아니면 false 반환)")
+    @Operation(summary = "중복 이름 검사", description = "중복된 이름인지 검사한다.\n\n(중복이면 true, 중복이 아니면 false 반환)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
     })
@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "패스워드 변경", description = "현재 요청을 보낸 유저의 패스워드를 변경한다")
+    @Operation(summary = "패스워드 변경", description = "현재 요청을 보낸 유저의 패스워드를 변경한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "패스워드 변경 성공", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "두 패스워드가 일치하지 않는 경우", content = @Content(mediaType = "application/json")),
@@ -122,7 +122,7 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "닉네임 변경", description = "현재 요청을 보낸 유저의 닉네임을 변경한다")
+    @Operation(summary = "닉네임 변경", description = "현재 요청을 보낸 유저의 닉네임을 변경한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "닉네임 변경 성공", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
@@ -132,5 +132,18 @@ public class UserController {
     public ResponseEntity<Void> changeNickname(@RequestBody ChangeNicknameClientDto dto) {
         userService.changeNickname(dto);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
+    }
+
+    @Tag(name = "유저")
+    @Operation(summary = "회원 탈퇴", description = "현재 요청을 보낸 유저를 DB에서 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "탈퇴 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> withdraw() {
+        userService.withdraw();
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 }
