@@ -9,6 +9,8 @@ public class GlobalConstants {
             "/user/signup",
             "/user/checkDuplicateEmail",
             "/user/checkDuplicateNickname",
-            "/user/checkRePassword"
+            "/user/checkRePassword",
+            "/experience/getAbilityList",
+            "/experience/getTierList",
     };
 }
