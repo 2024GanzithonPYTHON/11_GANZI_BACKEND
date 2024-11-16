@@ -67,9 +67,9 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
-    @PostMapping("/checkDuplicateNickName")
-    public CheckDuplicateServerDto checkDuplicateNickName(@RequestBody CheckDuplicateNickNameClientDto dto) {
-        return userService.checkDuplicateNickName(dto);
+    @PostMapping("/checkDuplicateNickname")
+    public CheckDuplicateServerDto checkDuplicateNickname(@RequestBody CheckDuplicateNicknameClientDto dto) {
+        return userService.checkDuplicateNickname(dto);
     }
 
     @Tag(name = "유저")
@@ -115,9 +115,22 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
-    @PostMapping("/changePassword")
+    @PatchMapping("/changePassword")
     public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordClientDto dto) {
         userService.changePassword(dto);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
+    }
+
+    @Tag(name = "유저")
+    @Operation(summary = "닉네임 변경", description = "현재 요청을 보낸 유저의 닉네임을 변경한다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "닉네임 변경 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
+    @PatchMapping("/changeNickname")
+    public ResponseEntity<Void> changeNickname(@RequestBody ChangeNicknameClientDto dto) {
+        userService.changeNickname(dto);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
     }
 }

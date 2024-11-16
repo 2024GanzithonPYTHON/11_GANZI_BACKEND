@@ -52,8 +52,8 @@ public class CustomUserDetails implements UserDetails {
         return user.getEmail();
     }
 
-    public String getNickName() {
-        return user.getNickName();
+    public String getNickname() {
+        return user.getNickname();
     }
 
     public User getUser() {

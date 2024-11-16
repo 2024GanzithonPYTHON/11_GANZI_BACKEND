@@ -20,9 +20,12 @@ public class User {
 
     private String password;
 
-    private String nickName;
+    private String nickname;
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

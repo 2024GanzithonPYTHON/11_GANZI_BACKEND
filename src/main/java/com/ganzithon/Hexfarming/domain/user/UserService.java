@@ -43,7 +43,7 @@ public class UserService {
         User newUser = User.builder()
                 .email(dto.email())
                 .password(hashedPassword)
-                .nickName(dto.nickName())
+                .nickname(dto.nickname())
                 .build();
         userRepository.save(newUser);
 
@@ -79,8 +79,8 @@ public class UserService {
         return new CheckDuplicateServerDto(result);
     }
 
-    public CheckDuplicateServerDto checkDuplicateNickName(CheckDuplicateNickNameClientDto dto) {
-        boolean result = userRepository.existsByNickName(dto.nickName());
+    public CheckDuplicateServerDto checkDuplicateNickname(CheckDuplicateNicknameClientDto dto) {
+        boolean result = userRepository.existsByNickname(dto.nickname());
         return new CheckDuplicateServerDto(result);
     }
 
@@ -91,7 +91,7 @@ public class UserService {
 
     public UserInformationServerDto userInformation() {
         CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
-        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getNickName());
+        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getNickname());
     }
 
     public CheckPasswordServerDto checkPassword(CheckPasswordClientDto dto) {
@@ -108,5 +108,10 @@ public class UserService {
 
         User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
         nowUser.setPassword(dto.password());
+    }
+
+    public void changeNickname(ChangeNicknameClientDto dto) {
+        User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
+        nowUser.setNickname(dto.nickname());
     }
 }
