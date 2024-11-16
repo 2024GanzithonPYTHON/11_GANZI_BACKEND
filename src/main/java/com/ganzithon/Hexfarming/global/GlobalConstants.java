@@ -8,6 +8,7 @@ public class GlobalConstants {
             "/user/login",
             "/user/signup",
             "/user/checkDuplicateEmail",
-            "/user/checkDuplicateName"
+            "/user/checkDuplicateName",
+            "/user/checkRePassword"
     };
 }

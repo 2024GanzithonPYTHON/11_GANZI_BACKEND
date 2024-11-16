@@ -1,11 +1,9 @@
 package com.ganzithon.Hexfarming.domain.user;
 
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.LoginClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.SignUpClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateNameClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateEmailClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckRePasswordServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import com.ganzithon.Hexfarming.global.utility.PasswordEncoderManager;
@@ -29,9 +27,9 @@ public class UserService {
     }
 
     @Transactional // DB에 접근한다는 것을 알리는 애너테이션
-    public ResponseTokenDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
-        // 입력된 두 패스워드가 같은지 검사
-        UserValidator.validatePassword(dto.password(), dto.rePassword());
+    public ResponseTokenServerDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
+        // 패스워드의 길이를 검사
+        UserValidator.validatePasswordLength(dto.password());
 
         // 비밀번호 암호화(해싱)
         String hashedPassword = passwordEncoderManager.encode(dto.password());
@@ -48,10 +46,10 @@ public class UserService {
         String accessToken = jwtManager.createToken(newUser.getId(), false);
         String refreshToken = jwtManager.createToken(newUser.getId(), true);
 
-        return new ResponseTokenDto(accessToken, refreshToken);
+        return new ResponseTokenServerDto(accessToken, refreshToken);
     }
 
-    public ResponseTokenDto logIn(LoginClientDto dto) {
+    public ResponseTokenServerDto logIn(LoginClientDto dto) {
         String email = dto.email();
         String password = dto.password();
 
@@ -66,18 +64,23 @@ public class UserService {
             String accessToken = jwtManager.createToken(existUser.getId(), false);
             String refreshToken = jwtManager.createToken(existUser.getId(), true);
 
-            return new ResponseTokenDto(accessToken, refreshToken);
+            return new ResponseTokenServerDto(accessToken, refreshToken);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 잘못되었습니다.");
     }
 
-    public CheckDuplicateDto checkDuplicateEmail(CheckDuplicateEmailClientDto dto) {
+    public CheckDuplicateServerDto checkDuplicateEmail(CheckDuplicateEmailClientDto dto) {
         boolean result = userRepository.existsByEmail(dto.email());
-        return new CheckDuplicateDto(result);
+        return new CheckDuplicateServerDto(result);
     }
 
-    public CheckDuplicateDto checkDuplicateName(CheckDuplicateNameClientDto dto) {
+    public CheckDuplicateServerDto checkDuplicateName(CheckDuplicateNameClientDto dto) {
         boolean result = userRepository.existsByName(dto.name());
-        return new CheckDuplicateDto(result);
+        return new CheckDuplicateServerDto(result);
+    }
+
+    public CheckRePasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
+        boolean result = UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword());
+        return new CheckRePasswordServerDto(result);
     }
 }
