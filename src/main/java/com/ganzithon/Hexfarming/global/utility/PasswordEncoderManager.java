@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.utility;
+package com.ganzithon.Hexfarming.global.utility;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

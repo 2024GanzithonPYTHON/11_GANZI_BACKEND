@@ -2,7 +2,8 @@ package com.ganzithon.Hexfarming.global.filter;
 
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
-import com.ganzithon.Hexfarming.utility.JwtManager;
+import com.ganzithon.Hexfarming.global.utility.JwtManager;
+import com.ganzithon.Hexfarming.global.utility.NoTokenNeededEndpointParser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,13 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         // Jwt 필터를 적용하지 않을 Endpoint를 작성
         String path = request.getRequestURI();
-        return path.equals("/favicon.ico")
-                || path.startsWith("/swagger")
-                || path.startsWith("/v3")
-                || path.equals("/user/login")
-                || path.equals("/user/signup")
-                || path.equals("/user/validateDuplicateEmail")
-                || path.equals("/user/validateDuplicateName")
-                ;
+        return NoTokenNeededEndpointParser.parsePath(path);
     }
 }

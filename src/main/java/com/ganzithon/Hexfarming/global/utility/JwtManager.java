@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.utility;
+package com.ganzithon.Hexfarming.global.utility;
 
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import io.jsonwebtoken.JwtParser;
