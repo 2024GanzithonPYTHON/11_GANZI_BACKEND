@@ -63,9 +63,9 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
-    @PostMapping("/checkDuplicateName")
-    public CheckDuplicateServerDto checkDuplicateName(@RequestBody CheckDuplicateNameClientDto dto) {
-        return userService.checkDuplicateName(dto);
+    @PostMapping("/checkDuplicateNickName")
+    public CheckDuplicateServerDto checkDuplicateNickName(@RequestBody CheckDuplicateNickNameClientDto dto) {
+        return userService.checkDuplicateNickName(dto);
     }
 
     @Tag(name = "유저")
