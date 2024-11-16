@@ -29,7 +29,7 @@ public class UserController {
     @Tag(name = "유저")
     @Operation(summary = "회원가입", description = "회원가입한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "회원가입 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseTokenServerDto.class))),
+            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseTokenServerDto.class))),
             @ApiResponse(responseCode = "400", description = "중복된 아이디 혹은 닉네임, 또는 비밀번호가 일치하지 않은 경우", content = @Content(mediaType = "application/json"))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST) // 해당 Endpoint로 들어오는 Post 요청은 CORS를 모두 허용
@@ -41,7 +41,7 @@ public class UserController {
     @Tag(name = "유저")
     @Operation(summary = "로그인", description = "로그인한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseTokenServerDto.class))),
+            @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseTokenServerDto.class))),
             @ApiResponse(responseCode = "400", description = "아이디 혹은 비밀번호가 일치하지 않은 경우", content = @Content(mediaType = "application/json"))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
@@ -53,7 +53,7 @@ public class UserController {
     @Tag(name = "유저")
     @Operation(summary = "중복 이메일 검사", description = "중복된 이메일인지 검사한다.\n\n(중복이면 true, 중복이 아니면 false 반환)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
+            @ApiResponse(responseCode = "200", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping("/checkDuplicateEmail")
@@ -64,7 +64,7 @@ public class UserController {
     @Tag(name = "유저")
     @Operation(summary = "중복 이름 검사", description = "중복된 이름인지 검사한다.\n\n(중복이면 true, 중복이 아니면 false 반환)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
+            @ApiResponse(responseCode = "200", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping("/checkDuplicateNickname")
@@ -75,7 +75,7 @@ public class UserController {
     @Tag(name = "유저")
     @Operation(summary = "회원가입 시 패스워드 검사", description = "입력된 두 패스워드(패스워드, 패스워드 확인)가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class)))
+            @ApiResponse(responseCode = "200", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping("/checkRePassword")
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "유저 정보 조회", description = "현재 요청한 유저의 정보를 조회한다.\n\n(이메일과 닉네임만 불러온다)")
+    @Operation(summary = "자신의 정보 조회", description = "현재 요청한 유저의 정보를 조회한다.\n\n(이메일과 닉네임만 불러온다)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserInformationServerDto.class))),
             @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
@@ -98,7 +98,7 @@ public class UserController {
     @Tag(name = "유저")
     @Operation(summary = "회원 정보 수정 전 패스워드 확인", description = "입력된 패스워드가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class))),
+            @ApiResponse(responseCode = "200", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class))),
             @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
