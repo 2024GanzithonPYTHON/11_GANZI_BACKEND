@@ -1,9 +1,7 @@
 package com.ganzithon.Hexfarming.domain.user;
 
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.LoginClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.SignUpClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateNameClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateEmailClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckRePasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateDto;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
@@ -30,8 +28,8 @@ public class UserService {
 
     @Transactional // DB에 접근한다는 것을 알리는 애너테이션
     public ResponseTokenDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
-        // 입력된 두 패스워드가 같은지 검사
-        UserValidator.validatePassword(dto.password(), dto.rePassword());
+        // 패스워드의 길이를 검사
+        UserValidator.validatePasswordLength(dto.password());
 
         // 비밀번호 암호화(해싱)
         String hashedPassword = passwordEncoderManager.encode(dto.password());
@@ -79,5 +77,10 @@ public class UserService {
     public CheckDuplicateDto checkDuplicateName(CheckDuplicateNameClientDto dto) {
         boolean result = userRepository.existsByName(dto.name());
         return new CheckDuplicateDto(result);
+    }
+
+    public CheckRePasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
+        boolean result = UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword());
+        return new CheckRePasswordServerDto(result);
     }
 }

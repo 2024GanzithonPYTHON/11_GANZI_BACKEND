@@ -1,9 +1,7 @@
 package com.ganzithon.Hexfarming.domain.user;
 
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.LoginClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.SignUpClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateNameClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateEmailClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckRePasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,5 +66,16 @@ public class UserController {
     @PostMapping("/checkDuplicateName")
     public CheckDuplicateDto checkDuplicateName(@RequestBody CheckDuplicateNameClientDto dto) {
         return userService.checkDuplicateName(dto);
+    }
+
+    @Tag(name = "유저")
+    @Operation(summary = "패스워드 검사", description = "입력된 두 패스워드가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateDto.class)))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @PostMapping("/checkRePassword")
+    public CheckRePasswordServerDto checkRePassword(@RequestBody CheckRePasswordClientDto dto) {
+        return userService.checkRePassword(dto);
     }
 }
