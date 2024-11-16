@@ -19,9 +19,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동으로 1, 2, 3, ... 1씩 증가해서 넣어줌
     private int id;
 
-    private String username;
+    private String email;
 
     private String password;
 
-    private String nickname;
+    private String name;
 }

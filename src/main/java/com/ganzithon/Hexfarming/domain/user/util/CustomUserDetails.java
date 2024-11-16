@@ -1,5 +1,6 @@
-package com.ganzithon.Hexfarming.domain.user;
+package com.ganzithon.Hexfarming.domain.user.util;
 
+import com.ganzithon.Hexfarming.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -48,10 +49,10 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
-    public String getNickname() {
-        return user.getNickname();
+    public String getName() {
+        return user.getName();
     }
 }

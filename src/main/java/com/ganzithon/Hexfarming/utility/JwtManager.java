@@ -1,6 +1,6 @@
 package com.ganzithon.Hexfarming.utility;
 
-import com.ganzithon.Hexfarming.domain.user.CustomUserDetails;
+import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

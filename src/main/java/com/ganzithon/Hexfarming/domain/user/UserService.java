@@ -1,8 +1,12 @@
 package com.ganzithon.Hexfarming.domain.user;
 
-import com.ganzithon.Hexfarming.dto.fromClient.LoginClientDto;
-import com.ganzithon.Hexfarming.dto.fromClient.SignUpClientDto;
-import com.ganzithon.Hexfarming.dto.fromServer.ResponseTokenDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.LoginClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.SignUpClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateNameClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateEmailClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateDto;
+import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
 import com.ganzithon.Hexfarming.utility.JwtManager;
 import com.ganzithon.Hexfarming.utility.PasswordEncoderManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +31,16 @@ public class UserService {
     @Transactional // DB에 접근한다는 것을 알리는 애너테이션
     public ResponseTokenDto signUp(SignUpClientDto dto) throws IllegalArgumentException {
         // 입력된 두 패스워드가 같은지 검사
-        validateRePasswordIsCorrect(dto.getPassword(), dto.getRePassword());
-
-        // DB에 해당 username이나 nickname이 동일한 User가 있는지 검증
-        validateUsername(dto.getUsername());
-        validateNickname(dto.getNickname());
+        UserValidator.validatePassword(dto.password(), dto.rePassword());
 
         // 비밀번호 암호화(해싱)
-        String hashedPassword = passwordEncoderManager.encode(dto.getPassword());
+        String hashedPassword = passwordEncoderManager.encode(dto.password());
 
         // 새로운 유저를 생성하여 DB에 저장
         User newUser = User.builder()
-                .username(dto.getUsername())
+                .email(dto.email())
                 .password(hashedPassword)
-                .nickname(dto.getNickname())
+                .name(dto.name())
                 .build();
         userRepository.save(newUser);
 
@@ -48,36 +48,15 @@ public class UserService {
         String accessToken = jwtManager.createToken(newUser.getId(), false);
         String refreshToken = jwtManager.createToken(newUser.getId(), true);
 
-        return ResponseTokenDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
-
-    private void validateRePasswordIsCorrect(String password, String rePassword) throws IllegalArgumentException {
-        if (!password.equals(rePassword)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    private void validateUsername(String username) {
-        if (userRepository.existsByUsername(username)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다.");
-        }
-    }
-
-    private void validateNickname(String nickname) {
-        if (userRepository.existsByNickname(nickname)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다.");
-        }
+        return new ResponseTokenDto(accessToken, refreshToken);
     }
 
     public ResponseTokenDto logIn(LoginClientDto dto) {
-        String username = dto.getUsername();
-        String password = dto.getPassword();
+        String email = dto.email();
+        String password = dto.password();
 
-        // 해당 username으로 등록된 유저가 있는지 확인하고 없으면 예외
-        User existUser = userRepository.findByUsername(username);
+        // 해당 email으로 등록된 유저가 있는지 확인하고 없으면 예외
+        User existUser = userRepository.findByEmail(email);
         if (existUser == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 잘못되었습니다.");
         }
@@ -87,11 +66,18 @@ public class UserService {
             String accessToken = jwtManager.createToken(existUser.getId(), false);
             String refreshToken = jwtManager.createToken(existUser.getId(), true);
 
-            return ResponseTokenDto.builder()
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .build();
+            return new ResponseTokenDto(accessToken, refreshToken);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 잘못되었습니다.");
+    }
+
+    public CheckDuplicateDto checkDuplicateEmail(CheckDuplicateEmailClientDto dto) {
+        boolean result = userRepository.existsByEmail(dto.email());
+        return new CheckDuplicateDto(result);
+    }
+
+    public CheckDuplicateDto checkDuplicateName(CheckDuplicateNameClientDto dto) {
+        boolean result = userRepository.existsByName(dto.name());
+        return new CheckDuplicateDto(result);
     }
 }
