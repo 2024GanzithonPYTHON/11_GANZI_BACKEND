@@ -7,8 +7,8 @@ import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateEmailCl
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateDto;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
-import com.ganzithon.Hexfarming.utility.JwtManager;
-import com.ganzithon.Hexfarming.utility.PasswordEncoderManager;
+import com.ganzithon.Hexfarming.global.utility.JwtManager;
+import com.ganzithon.Hexfarming.global.utility.PasswordEncoderManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
