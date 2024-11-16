@@ -4,11 +4,13 @@ import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckPasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.UserInformationServerDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,10 +82,22 @@ public class UserController {
     }
 
     @Tag(name = "유저")
+    @Operation(summary = "유저 정보 조회", description = "현재 요청한 유저의 정보를 조회한다.\n\n(이메일과 닉네임만 불러온다)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserInformationServerDto.class))),
+            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @GetMapping("/userInformation")
+    public UserInformationServerDto userInformation() {
+        return userService.userInformation();
+    }
+
+    @Tag(name = "유저")
     @Operation(summary = "회원 정보 수정 전 패스워드 확인", description = "입력된 패스워드가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class))),
-            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우")
+            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping("/checkPassword")

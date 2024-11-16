@@ -4,6 +4,7 @@ import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckPasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.UserInformationServerDto;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
@@ -86,6 +87,11 @@ public class UserService {
     public CheckPasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
         boolean result = UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword());
         return new CheckPasswordServerDto(result);
+    }
+
+    public UserInformationServerDto userInformation() {
+        CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
+        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getNickName());
     }
 
     public CheckPasswordServerDto checkPassword(CheckPasswordClientDto dto) {
