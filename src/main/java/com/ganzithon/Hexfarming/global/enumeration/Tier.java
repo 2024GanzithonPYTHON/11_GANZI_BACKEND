@@ -1,6 +1,8 @@
 package com.ganzithon.Hexfarming.global.enumeration;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Getter
 public enum Tier {
@@ -43,5 +45,14 @@ public enum Tier {
         this.id = id;
         this.name = name;
         this.requiredExperience = requiredExperience;
+    }
+
+    public static Tier fromId(int id) { // 계급 id로부터 Tier Enum 값을 찾아서 반환
+        for (Tier tier : Tier.values()) {
+            if (tier.getId() == id) {
+                return tier;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 계급 id입니다.");
     }
 }

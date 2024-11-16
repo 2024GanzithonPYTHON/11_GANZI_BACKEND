@@ -1,6 +1,8 @@
 package com.ganzithon.Hexfarming.global.enumeration;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Getter
 public enum Ability {
@@ -20,5 +22,14 @@ public enum Ability {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public static Ability fromId(int id) { // 역량 id로부터 Ability Enum 값을 찾아서 반환
+        for (Ability ability : Ability.values()) {
+            if (ability.getId() == id) {
+                return ability;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 역량 id입니다.");
     }
 }
