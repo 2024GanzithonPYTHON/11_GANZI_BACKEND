@@ -1,7 +1,7 @@
 package com.ganzithon.Hexfarming.domain.user;
 
 import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
-import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckRePasswordServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckPasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,13 +69,25 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "패스워드 검사", description = "입력된 두 패스워드가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
+    @Operation(summary = "회원가입 시 패스워드 검사", description = "입력된 두 패스워드(패스워드, 패스워드 확인)가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateServerDto.class)))
+            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
     @PostMapping("/checkRePassword")
-    public CheckRePasswordServerDto checkRePassword(@RequestBody CheckRePasswordClientDto dto) {
+    public CheckPasswordServerDto checkRePassword(@RequestBody CheckRePasswordClientDto dto) {
         return userService.checkRePassword(dto);
+    }
+
+    @Tag(name = "유저")
+    @Operation(summary = "회원 정보 수정 전 패스워드 확인", description = "입력된 패스워드가 일치하는지 검사한다.\n\n(일치하면 true, 일치하지 않으면 false 반환)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckPasswordServerDto.class))),
+            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우")
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @PostMapping("/checkPassword")
+    public CheckPasswordServerDto checkPassword(@RequestBody CheckPasswordClientDto dto) {
+        return userService.checkPassword(dto);
     }
 }

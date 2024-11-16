@@ -3,7 +3,10 @@ package com.ganzithon.Hexfarming.domain.user.util;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,5 +37,15 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "존재하지 않는 아이디입니다.");
         }
         return new CustomUserDetails(user);
+    }
+
+    public CustomUserDetails getCurrentUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof  CustomUserDetails) {
+            return (CustomUserDetails) authentication.getPrincipal();
+        } else {
+            throw new ResponseStatusException(HttpStatus.valueOf(401), "잘못된 유저 정보입니다.");
+        }
     }
 }

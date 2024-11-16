@@ -1,9 +1,11 @@
 package com.ganzithon.Hexfarming.domain.user;
 
 import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
-import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckRePasswordServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckPasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
+import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
+import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import com.ganzithon.Hexfarming.global.utility.PasswordEncoderManager;
@@ -16,12 +18,14 @@ import org.springframework.web.server.ResponseStatusException;
 @Service // Service 클래스(로직을 처리)임을 알려줌
 public class UserService {
     private final UserRepository userRepository;
+    private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoderManager passwordEncoderManager;
     private final JwtManager jwtManager;
 
     @Autowired // Bean으로 관리하고 있는 객체들을 자동으로 주입해줌
-    public UserService(UserRepository userRepository, PasswordEncoderManager passwordEncoderManager, JwtManager jwtManager) {
+    public UserService(UserRepository userRepository, CustomUserDetailsService customUserDetailsService, PasswordEncoderManager passwordEncoderManager, JwtManager jwtManager) {
         this.userRepository = userRepository;
+        this.customUserDetailsService = customUserDetailsService;
         this.passwordEncoderManager = passwordEncoderManager;
         this.jwtManager = jwtManager;
     }
@@ -79,8 +83,14 @@ public class UserService {
         return new CheckDuplicateServerDto(result);
     }
 
-    public CheckRePasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
+    public CheckPasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
         boolean result = UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword());
-        return new CheckRePasswordServerDto(result);
+        return new CheckPasswordServerDto(result);
+    }
+
+    public CheckPasswordServerDto checkPassword(CheckPasswordClientDto dto) {
+        CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
+        boolean result = passwordEncoderManager.matches(dto.password(), nowUser.getPassword());
+        return new CheckPasswordServerDto(result);
     }
 }
