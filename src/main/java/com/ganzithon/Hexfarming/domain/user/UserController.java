@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j // 로그를 자세하게 남겨줘서 적용하면 좋음
@@ -103,5 +105,19 @@ public class UserController {
     @PostMapping("/checkPassword")
     public CheckPasswordServerDto checkPassword(@RequestBody CheckPasswordClientDto dto) {
         return userService.checkPassword(dto);
+    }
+
+    @Tag(name = "유저")
+    @Operation(summary = "패스워드 변경", description = "현재 요청을 보낸 유저의 패스워드를 변경한다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "패스워드 변경 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "두 패스워드가 일치하지 않는 경우", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "잘못된 유저가 요청할 경우", content = @Content(mediaType = "application/json"))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.PATCH)
+    @PostMapping("/changePassword")
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordClientDto dto) {
+        userService.changePassword(dto);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
     }
 }

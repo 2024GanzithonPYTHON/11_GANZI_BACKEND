@@ -55,4 +55,8 @@ public class CustomUserDetails implements UserDetails {
     public String getNickName() {
         return user.getNickName();
     }
+
+    public User getUser() {
+        return this.user;
+    }
 }

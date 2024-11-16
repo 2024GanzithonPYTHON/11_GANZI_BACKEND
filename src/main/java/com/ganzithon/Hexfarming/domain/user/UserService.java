@@ -99,4 +99,14 @@ public class UserService {
         boolean result = passwordEncoderManager.matches(dto.password(), nowUser.getPassword());
         return new CheckPasswordServerDto(result);
     }
+
+    public void changePassword(ChangePasswordClientDto dto) {
+        if (!UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
+        UserValidator.validatePasswordLength(dto.password());
+
+        User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
+        nowUser.setPassword(dto.password());
+    }
 }
