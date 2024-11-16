@@ -1,5 +1,6 @@
-package com.ganzithon.Hexfarming.domain.user;
+package com.ganzithon.Hexfarming.domain.user.util;
 
+import com.ganzithon.Hexfarming.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

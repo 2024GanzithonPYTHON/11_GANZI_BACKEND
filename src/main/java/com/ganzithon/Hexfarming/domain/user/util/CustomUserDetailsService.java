@@ -1,5 +1,7 @@
-package com.ganzithon.Hexfarming.domain.user;
+package com.ganzithon.Hexfarming.domain.user.util;
 
+import com.ganzithon.Hexfarming.domain.user.User;
+import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.userdetails.UserDetails;
