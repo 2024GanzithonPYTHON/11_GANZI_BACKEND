@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.domain.experience;
 
 import com.ganzithon.Hexfarming.domain.experience.dto.AbilityListServerDto;
 import com.ganzithon.Hexfarming.domain.experience.dto.ExperienceServerDto;
+import com.ganzithon.Hexfarming.domain.experience.dto.TierListServerDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,12 +27,23 @@ public class ExperienceController {
     @Tag(name = "경험치 관련")
     @Operation(summary = "역량 목록 조회", description = "6개의 역량 목록을 출력한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceServerDto.class)))),
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AbilityListServerDto.class)))),
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping("/getAbilityList")
     public List<AbilityListServerDto> getAbilityList() {
         return experienceService.getAbilityList();
+    }
+
+    @Tag(name = "경험치 관련")
+    @Operation(summary = "계급 목록 조회", description = "모든 계급 목록을 출력한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TierListServerDto.class)))),
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping("/getTierList")
+    public List<TierListServerDto> getTierList() {
+        return experienceService.getTierList();
     }
 
     @Tag(name = "경험치 관련")

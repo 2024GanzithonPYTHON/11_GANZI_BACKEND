@@ -11,5 +11,6 @@ public class GlobalConstants {
             "/user/checkDuplicateNickname",
             "/user/checkRePassword",
             "/experience/getAbilityList",
+            "/experience/getTierList",
     };
 }

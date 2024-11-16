@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.domain.experience;
 
 import com.ganzithon.Hexfarming.domain.experience.dto.AbilityListServerDto;
 import com.ganzithon.Hexfarming.domain.experience.dto.ExperienceServerDto;
+import com.ganzithon.Hexfarming.domain.experience.dto.TierListServerDto;
 import com.ganzithon.Hexfarming.domain.experience.util.ExperienceCreator;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
@@ -39,6 +40,12 @@ public class ExperienceService {
     public List<AbilityListServerDto> getAbilityList() {
         return Arrays.stream(Ability.values())
                 .map(AbilityListServerDto::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<TierListServerDto> getTierList() {
+        return Arrays.stream(Tier.values())
+                .map(TierListServerDto::from)
                 .collect(Collectors.toList());
     }
 
