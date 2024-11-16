@@ -4,10 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder // 객체 생성을 쉽게 만들어주는 애너테이션
@@ -23,5 +20,12 @@ public class User {
 
     private String password;
 
-    private String nickName;
+    private String nickname;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

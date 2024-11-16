@@ -1,14 +1,18 @@
 package com.ganzithon.Hexfarming.domain.user;
 
 import com.ganzithon.Hexfarming.domain.user.dto.fromClient.*;
-import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckRePasswordServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckPasswordServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.UserInformationServerDto;
+import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
+import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import com.ganzithon.Hexfarming.global.utility.PasswordEncoderManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,12 +20,14 @@ import org.springframework.web.server.ResponseStatusException;
 @Service // Service 클래스(로직을 처리)임을 알려줌
 public class UserService {
     private final UserRepository userRepository;
+    private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoderManager passwordEncoderManager;
     private final JwtManager jwtManager;
 
     @Autowired // Bean으로 관리하고 있는 객체들을 자동으로 주입해줌
-    public UserService(UserRepository userRepository, PasswordEncoderManager passwordEncoderManager, JwtManager jwtManager) {
+    public UserService(UserRepository userRepository, CustomUserDetailsService customUserDetailsService, PasswordEncoderManager passwordEncoderManager, JwtManager jwtManager) {
         this.userRepository = userRepository;
+        this.customUserDetailsService = customUserDetailsService;
         this.passwordEncoderManager = passwordEncoderManager;
         this.jwtManager = jwtManager;
     }
@@ -38,7 +44,7 @@ public class UserService {
         User newUser = User.builder()
                 .email(dto.email())
                 .password(hashedPassword)
-                .nickName(dto.nickName())
+                .nickname(dto.nickname())
                 .build();
         userRepository.save(newUser);
 
@@ -74,13 +80,45 @@ public class UserService {
         return new CheckDuplicateServerDto(result);
     }
 
-    public CheckDuplicateServerDto checkDuplicateNickName(CheckDuplicateNickNameClientDto dto) {
-        boolean result = userRepository.existsByNickName(dto.nickName());
+    public CheckDuplicateServerDto checkDuplicateNickname(CheckDuplicateNicknameClientDto dto) {
+        boolean result = userRepository.existsByNickname(dto.nickname());
         return new CheckDuplicateServerDto(result);
     }
 
-    public CheckRePasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
+    public CheckPasswordServerDto checkRePassword(CheckRePasswordClientDto dto) {
         boolean result = UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword());
-        return new CheckRePasswordServerDto(result);
+        return new CheckPasswordServerDto(result);
+    }
+
+    public UserInformationServerDto userInformation() {
+        CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
+        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getNickname());
+    }
+
+    public CheckPasswordServerDto checkPassword(CheckPasswordClientDto dto) {
+        CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
+        boolean result = passwordEncoderManager.matches(dto.password(), nowUser.getPassword());
+        return new CheckPasswordServerDto(result);
+    }
+
+    public void changePassword(ChangePasswordClientDto dto) {
+        if (!UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
+        UserValidator.validatePasswordLength(dto.password());
+
+        User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
+        nowUser.setPassword(dto.password());
+    }
+
+    public void changeNickname(ChangeNicknameClientDto dto) {
+        User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
+        nowUser.setNickname(dto.nickname());
+    }
+
+    public void withdraw() {
+        User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
+        userRepository.delete(nowUser);
+        SecurityContextHolder.clearContext();
     }
 }
