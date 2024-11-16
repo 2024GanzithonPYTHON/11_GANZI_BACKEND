@@ -42,7 +42,9 @@ public class SecurityConfig {
                                     "/swagger-ui/**",
                                     "/v3/api-docs/**",
                                     "/user/login",
-                                    "/user/signup"
+                                    "/user/signup",
+                                    "/user/validateDuplicateEmail",
+                                    "/user/validateDuplicateName"
                             ).permitAll() // 위 Endpoint에 해당하는 요청은 토큰 없이도 접근 가능 + JwtAuthenticationFilter.java에서도 추가해 줘야 함
                             .anyRequest().authenticated(); // 그 외 나머지 요청들은 JWT 토큰이 있어야 접근 가능
                 })

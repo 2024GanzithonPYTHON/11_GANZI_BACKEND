@@ -1,9 +1,3 @@
 package com.ganzithon.Hexfarming.domain.user.dto.fromClient;
 
-import lombok.Getter;
-
-@Getter
-public class LoginClientDto {
-    private String username;
-    private String password;
-}
+public record LoginClientDto(String email, String password) {}

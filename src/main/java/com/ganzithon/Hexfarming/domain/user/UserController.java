@@ -2,9 +2,10 @@ package com.ganzithon.Hexfarming.domain.user;
 
 import com.ganzithon.Hexfarming.domain.user.dto.fromClient.LoginClientDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromClient.SignUpClientDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromClient.ValidateDuplicateUsernameClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateNameClientDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromClient.CheckDuplicateEmailClientDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenDto;
-import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ValidateDuplicateDto;
+import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,13 +49,24 @@ public class UserController {
     }
 
     @Tag(name = "유저")
-    @Operation(summary = "중복 아이디 검사", description = "중복된 아이디인지 검사한다\n(중복이면 true, 중복이 아니면 false 반환)")
+    @Operation(summary = "중복 이메일 검사", description = "중복된 이메일인지 검사한다\n\n(중복이면 true, 중복이 아니면 false 반환)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ValidateDuplicateDto.class)))
+            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.POST)
-    @PostMapping("/validateDuplicateUsername")
-    public ValidateDuplicateDto validateDuplicateUsername(@RequestBody ValidateDuplicateUsernameClientDto dto) {
-        return userService.validateDuplicateUsername(dto);
+    @PostMapping("/checkDuplicateEmail")
+    public CheckDuplicateDto checkDuplicateEmail(@RequestBody CheckDuplicateEmailClientDto dto) {
+        return userService.checkDuplicateEmail(dto);
+    }
+
+    @Tag(name = "유저")
+    @Operation(summary = "중복 이름 검사", description = "중복된 이름인지 검사한다\n\n(중복이면 true, 중복이 아니면 false 반환)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "검사 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CheckDuplicateDto.class)))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @PostMapping("/checkDuplicateName")
+    public CheckDuplicateDto checkDuplicateName(@RequestBody CheckDuplicateNameClientDto dto) {
+        return userService.checkDuplicateName(dto);
     }
 }

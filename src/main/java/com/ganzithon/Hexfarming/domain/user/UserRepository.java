@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 // User 객체를 저장하는 DB를 쉽게 다룰 수 있는 JPA Repository
 public interface UserRepository extends JpaRepository<User, Integer> { // <User, id타입>
     User findById(int id);
-    User findByUsername(String username);
+    User findByEmail(String email);
 
-    boolean existsByUsername(String username);
-    boolean existsByNickname(String nickname);
+    boolean existsByEmail(String email);
+    boolean existsByName(String name);
 }

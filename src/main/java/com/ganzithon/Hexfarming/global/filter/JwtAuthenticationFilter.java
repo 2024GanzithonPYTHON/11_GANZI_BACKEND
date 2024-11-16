@@ -54,6 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger")
                 || path.startsWith("/v3")
                 || path.equals("/user/login")
-                || path.equals("/user/signup");
+                || path.equals("/user/signup")
+                || path.equals("/user/validateDuplicateEmail")
+                || path.equals("/user/validateDuplicateName")
+                ;
     }
 }
