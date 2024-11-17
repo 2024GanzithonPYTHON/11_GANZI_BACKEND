@@ -140,8 +140,6 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시물에 댓글이 없습니다.");
         }
 
-        // 로그로 데이터 확인
-        System.out.println("댓글 수: " + comments.size());
         return comments.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
