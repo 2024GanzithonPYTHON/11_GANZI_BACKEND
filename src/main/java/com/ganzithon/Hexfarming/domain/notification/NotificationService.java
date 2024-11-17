@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.notification;
 
+import com.ganzithon.Hexfarming.domain.notification.dto.fromClient.DeleteNotificationClientDto;
 import com.ganzithon.Hexfarming.domain.notification.dto.fromServer.ResponseNotificationServerDto;
 import com.ganzithon.Hexfarming.domain.user.UserService;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
@@ -36,5 +37,9 @@ public class NotificationService {
         return notificationsOptional.get().stream()
                 .map(ResponseNotificationServerDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public void delete(DeleteNotificationClientDto dto) {
+        notificationRepository.deleteById(dto.notificationId());
     }
 }
