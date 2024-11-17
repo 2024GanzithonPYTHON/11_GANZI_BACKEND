@@ -59,7 +59,7 @@ public enum Tier {
     public static Tier caculateTier(int experience) {
         for (Tier tier : Tier.values()) {
             if (experience < tier.getRequiredExperience()) {
-                return Tier.values()[tier.ordinal() - 1];
+                return tier;
             }
         }
         return Tier.TIER5_5;
