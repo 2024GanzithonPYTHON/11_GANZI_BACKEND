@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto.fromServer;
+package com.ganzithon.Hexfarming.domain.post.dto.fromServer;
 
 public class AverageScoreResponseDto {
     private int averageScore;

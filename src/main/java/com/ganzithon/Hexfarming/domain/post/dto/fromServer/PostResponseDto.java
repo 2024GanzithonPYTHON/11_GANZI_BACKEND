@@ -1,7 +1,7 @@
-package com.ganzithon.Hexfarming.dto.fromServer;
+package com.ganzithon.Hexfarming.domain.post.dto.fromServer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ganzithon.Hexfarming.post.Post;
+import com.ganzithon.Hexfarming.domain.post.Post;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

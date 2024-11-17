@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto.fromClient;
+package com.ganzithon.Hexfarming.domain.comment.dto.fromClient;
 
 import lombok.Getter;
 import lombok.Setter;

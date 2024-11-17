@@ -1,6 +1,6 @@
-package com.ganzithon.Hexfarming.comment;
+package com.ganzithon.Hexfarming.domain.comment;
 
-import com.ganzithon.Hexfarming.post.Post;
+import com.ganzithon.Hexfarming.domain.post.Post;
 import com.ganzithon.Hexfarming.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;

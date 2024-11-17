@@ -1,9 +1,8 @@
-package com.ganzithon.Hexfarming.post;
+package com.ganzithon.Hexfarming.domain.post;
 
-import com.ganzithon.Hexfarming.comment.Comment;
+import com.ganzithon.Hexfarming.domain.comment.Comment;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
-import com.ganzithon.Hexfarming.global.enumeration.Tier;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

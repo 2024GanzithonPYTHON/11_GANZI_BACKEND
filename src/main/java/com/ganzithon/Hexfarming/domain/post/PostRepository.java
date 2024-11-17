@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.post;
+package com.ganzithon.Hexfarming.domain.post;
 
 import org.springframework.data.repository.CrudRepository;
 

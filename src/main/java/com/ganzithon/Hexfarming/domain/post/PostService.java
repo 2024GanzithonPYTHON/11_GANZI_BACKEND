@@ -1,8 +1,8 @@
-package com.ganzithon.Hexfarming.post;
+package com.ganzithon.Hexfarming.domain.post;
 
-import com.ganzithon.Hexfarming.dto.fromClient.PostRequestDto;
-import com.ganzithon.Hexfarming.dto.fromClient.PostUpdateRequestDto;
-import com.ganzithon.Hexfarming.dto.fromServer.PostResponseDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import com.ganzithon.Hexfarming.comment.CommentRepository;
+import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 

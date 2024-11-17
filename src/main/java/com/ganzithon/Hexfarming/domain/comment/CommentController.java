@@ -1,7 +1,7 @@
-package com.ganzithon.Hexfarming.comment;
+package com.ganzithon.Hexfarming.domain.comment;
 
-import com.ganzithon.Hexfarming.dto.fromClient.CommentRequestDto;
-import com.ganzithon.Hexfarming.dto.fromServer.CommentResponseDto;
+import com.ganzithon.Hexfarming.domain.comment.dto.fromClient.CommentRequestDto;
+import com.ganzithon.Hexfarming.domain.comment.dto.fromServer.CommentResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

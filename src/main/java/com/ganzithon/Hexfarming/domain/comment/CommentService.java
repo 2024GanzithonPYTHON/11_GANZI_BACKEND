@@ -1,11 +1,11 @@
-package com.ganzithon.Hexfarming.comment;
+package com.ganzithon.Hexfarming.domain.comment;
 
-import com.ganzithon.Hexfarming.dto.fromClient.CommentRequestDto;
-import com.ganzithon.Hexfarming.dto.fromServer.CommentResponseDto;
+import com.ganzithon.Hexfarming.domain.comment.dto.fromClient.CommentRequestDto;
+import com.ganzithon.Hexfarming.domain.comment.dto.fromServer.CommentResponseDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
-import com.ganzithon.Hexfarming.post.Post;
-import com.ganzithon.Hexfarming.post.PostRepository;
+import com.ganzithon.Hexfarming.domain.post.Post;
+import com.ganzithon.Hexfarming.domain.post.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

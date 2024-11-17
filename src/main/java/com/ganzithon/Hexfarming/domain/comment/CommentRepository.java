@@ -1,10 +1,10 @@
-package com.ganzithon.Hexfarming.comment;
+package com.ganzithon.Hexfarming.domain.comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import com.ganzithon.Hexfarming.post.Post;
+import com.ganzithon.Hexfarming.domain.post.Post;
 import com.ganzithon.Hexfarming.domain.user.User;
 import java.util.List;
 

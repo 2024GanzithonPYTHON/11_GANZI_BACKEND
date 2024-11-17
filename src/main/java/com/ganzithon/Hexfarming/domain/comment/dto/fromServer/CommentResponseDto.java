@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto.fromServer;
+package com.ganzithon.Hexfarming.domain.comment.dto.fromServer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

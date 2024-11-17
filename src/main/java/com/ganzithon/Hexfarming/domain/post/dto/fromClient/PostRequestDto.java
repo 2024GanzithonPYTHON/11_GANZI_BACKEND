@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.dto.fromClient;
+package com.ganzithon.Hexfarming.domain.post.dto.fromClient;
 
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 

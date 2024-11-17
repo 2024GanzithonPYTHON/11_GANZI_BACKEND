@@ -1,10 +1,9 @@
-package com.ganzithon.Hexfarming.post;
+package com.ganzithon.Hexfarming.domain.post;
 
-import com.ganzithon.Hexfarming.dto.fromClient.PostRequestDto;
-import com.ganzithon.Hexfarming.dto.fromClient.PostUpdateRequestDto;
-import com.ganzithon.Hexfarming.dto.fromServer.AverageScoreResponseDto;
-import com.ganzithon.Hexfarming.dto.fromServer.PostResponseDto;
-import com.ganzithon.Hexfarming.post.PostService;
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.AverageScoreResponseDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
