@@ -1,4 +1,4 @@
-package com.ganzithon.Hexfarming.domain.experience.dto;
+package com.ganzithon.Hexfarming.domain.experience.dto.fromServer;
 
 import com.ganzithon.Hexfarming.global.enumeration.Tier;
 
