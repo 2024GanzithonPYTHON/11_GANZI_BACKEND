@@ -41,6 +41,8 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime timer;
 
+    private boolean isTimerOver;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Ability ability; // 게시물 카테고리 (Enum으로 6개 중 하나 선택하는 형태)
