@@ -11,11 +11,10 @@ public class PostResponseDto {
     private Long postId;
     private String title;
     private String content;
-    private String categoryName;
+    private String abilityName;
     private String remainingTime; // 남은 시간
     private int view; // 조회수
     private String writerNickname;
-    private String tier;
     private String imageBase64; // Base64로 인코딩된 이미지 데이터
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
@@ -25,7 +24,7 @@ public class PostResponseDto {
             Long postId,
             String title,
             String content,
-            String categoryName,
+            String abilityName,
             String remainingTime,
             int view,
             String writerNickname,
@@ -35,7 +34,7 @@ public class PostResponseDto {
         this.postId = postId;
         this.title = title;
         this.content = content;
-        this.categoryName = categoryName;
+        this.abilityName = abilityName;
         this.remainingTime = remainingTime;
         this.view = view;
         this.writerNickname = writerNickname;
@@ -90,8 +89,8 @@ public class PostResponseDto {
         return content;
     }
 
-    public String getCategoryName() {
-        return categoryName; // 수정
+    public String getAbilityName() {
+        return abilityName; // 수정
     }
 
     public String getRemainingTime() {

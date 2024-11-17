@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.post;
 
+import com.ganzithon.Hexfarming.domain.experience.ExperienceService;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
@@ -8,6 +9,7 @@ import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,17 +18,20 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
 
+    private final ExperienceService experienceService;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final JwtManager jwtManager; // JWT 토큰 처리 클래스
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, JwtManager jwtManager, CommentRepository commentRepository) {
+    public PostService(ExperienceService experienceService, PostRepository postRepository, UserRepository userRepository, JwtManager jwtManager, CommentRepository commentRepository) {
+        this.experienceService = experienceService;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.jwtManager = jwtManager;
@@ -151,6 +156,20 @@ public class PostService {
 
         // 평균 점수가 null이면 댓글이 없거나 남은 시간이 없으므로 기본값 100 반환
         return (averageScore != null) ? (int) Math.round(averageScore) : 100;
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void checkIfTimerOver() {
+        LocalDateTime now = LocalDateTime.now();
+        Optional<List<Post>> postsOptional = postRepository.findByTimerBeforeAndIsTimerOverFalse(now);
+        if (postsOptional.isPresent()) {
+            postsOptional.get().stream()
+                    .forEach(post -> {
+                        int writerId = post.getWriter().getId();
+                        experienceService.inceaseExperience(writerId, post.getAbility(), getAverageScoreByPostId(post.getPostId()));
+                        post.setTimerOver(true);
+                    });
+        }
     }
 
 }
