@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.post;
 
 import com.ganzithon.Hexfarming.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.dto.fromClient.PostUpdateRequestDto;
+import com.ganzithon.Hexfarming.dto.fromServer.AverageScoreResponseDto;
 import com.ganzithon.Hexfarming.dto.fromServer.PostResponseDto;
 import com.ganzithon.Hexfarming.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,17 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
+
+    // 평균 점수 확인
+    @GetMapping("/{postId}/average-score")
+    public ResponseEntity<AverageScoreResponseDto> getAverageScore(@PathVariable Long postId) {
+        // 평균 점수 계산 (남아있는 시간 기준으로 계산)
+        int averageScore = postService.getAverageScoreByPostId(postId);
+
+        AverageScoreResponseDto responseDto = new AverageScoreResponseDto(postId, averageScore);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
 }
 

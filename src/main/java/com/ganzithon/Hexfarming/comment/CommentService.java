@@ -29,78 +29,61 @@ public class CommentService {
         this.userRepository = userRepository;
     }
 
+    // 댓글 생성
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, String username) {
-        // 작성자 확인
         User user = getUserByUsername(username);
-
-        // 게시물 확인
         Post post = getPostById(postId);
 
-        // 점수 유효성 검증
-        validateScore(commentRequestDto.getScore());
+        // 댓글 중복 여부 확인
+        boolean alreadyCommented = commentRepository.existsByPostAndWriter(post, user);
+        if (alreadyCommented) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 해당 게시물에 댓글을 작성하셨습니다.");
+        }
 
-        // 댓글 생성
+        int validatedScore = validateScore(commentRequestDto.getScore());
+
         Comment comment = new Comment();
         comment.setContent(commentRequestDto.getContent());
         comment.setWriterNickname(user.getNickname());
         comment.setWriterTier(user.getTier());
-        comment.setScore(commentRequestDto.getScore());
+        comment.setScore(validatedScore);
         comment.setPost(post);
         comment.setWriter(user);
 
-        // 댓글 저장
         commentRepository.save(comment);
 
-        // DTO 반환
+        // 게시글 점수 합계
+        post.setScoreSum(post.getScoreSum() + validatedScore);
+        postRepository.save(post);
+
         return mapToDto(comment);
     }
 
-    @Transactional(readOnly = true)
-    public List<CommentResponseDto> getCommentsByPostId(Long postId) {
-        // 댓글 조회 및 DTO 변환
-        return commentRepository.findByPost_PostId(postId)
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
-    }
-
+    // 댓글 수정
     @Transactional
     public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, String username) {
-        // 게시물 확인
         Post post = getPostById(postId);
 
-        // 댓글 조회 및 작성자 확인
         Comment comment = getCommentByIdAndVerifyOwnership(commentId, username);
 
-        // 댓글이 해당 게시물에 속해 있는지 확인
-        if (!comment.getPost().equals(post)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시물의 댓글이 아닙니다.");
-        }
-
-        // 점수 유효성 검증(100~200점)
-        validateScore(commentRequestDto.getScore());
-
-        // 댓글 수정
         comment.setContent(commentRequestDto.getContent());
-        comment.setScore(commentRequestDto.getScore());
 
-        // DTO 반환
+        postRepository.save(post);
+
         return mapToDto(comment);
     }
 
+    // 댓글 삭제
     @Transactional
     public void deleteComment(Long postId, Long commentId, String username) {
         Post post = getPostById(postId);
-
-        // 댓글 조회 & 작성자 확인
         Comment comment = getCommentByIdAndVerifyOwnership(commentId, username);
 
-        if (!comment.getPost().equals(post)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시물의 댓글이 아닙니다.");
-        }
+        // 게시글 점수 합계
+        post.setScoreSum(post.getScoreSum() - comment.getScore());
+        postRepository.save(post);
 
-        // 댓글 삭제
         commentRepository.delete(comment);
     }
 
@@ -128,10 +111,17 @@ public class CommentService {
         return comment;
     }
 
-    private void validateScore(int score) {
+    private int validateScore(Integer score) {
+        if (score == null) {
+            return 150; // 기본값 설정
+        }
+
+        // score가 null이 아닌 경우만 유효성 검사
         if (score < 100 || score > 200) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "점수는 100에서 200 사이여야 합니다.");
         }
+
+        return score; // 유효한 점수 반환
     }
 
     private CommentResponseDto mapToDto(Comment comment) {
@@ -143,5 +133,19 @@ public class CommentService {
                 comment.getCreatedAt(),
                 comment.getScore()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getCommentsByPostId(Long postId) {
+        List<Comment> comments = commentRepository.findByPost_PostId(postId);
+        if (comments == null || comments.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시물에 댓글이 없습니다.");
+        }
+
+        // 로그로 데이터 확인
+        System.out.println("댓글 수: " + comments.size());
+        return comments.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 }

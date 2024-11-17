@@ -35,6 +35,6 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now(); // 댓글 작성 시간
 
-    @Column(nullable = false)
+    @Column
     private int score; // 점수
 }

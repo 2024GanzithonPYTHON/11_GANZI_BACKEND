@@ -1,10 +1,13 @@
 package com.ganzithon.Hexfarming.post;
 
+import com.ganzithon.Hexfarming.comment.Comment;
 import com.ganzithon.Hexfarming.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,4 +49,9 @@ public class Post {
 
     @Lob
     private byte[] image;
+
+    private int scoreSum = 0; // 점수 합산값
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }

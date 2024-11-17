@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
+import com.ganzithon.Hexfarming.comment.CommentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,13 +22,15 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final JwtManager jwtManager; // JWT 토큰 처리 클래스
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, JwtManager jwtManager) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, JwtManager jwtManager, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.jwtManager = jwtManager;
+        this.commentRepository = commentRepository;
     }
 
 
@@ -141,4 +143,18 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    // 평균 점수 구하기
+    @Transactional(readOnly = true)
+    public int getAverageScoreByPostId(Long postId) {
+        postRepository.findById(postId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다."));
+
+        // 댓글 평균 점수 계산 (남아있는 시간 기준)
+        Double averageScore = commentRepository.getAverageScoreByPostIdWithRemainingTime(postId);
+
+        // 평균 점수가 null이면 댓글이 없거나 남은 시간이 없으므로 기본값 100 반환
+        return (averageScore != null) ? (int) Math.round(averageScore) : 100;
+    }
+
 }
