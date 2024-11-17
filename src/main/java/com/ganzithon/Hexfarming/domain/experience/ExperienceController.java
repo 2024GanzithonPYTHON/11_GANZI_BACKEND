@@ -79,7 +79,7 @@ public class ExperienceController {
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping("/getMyAbilityExperiences/{ability}")
-    public ExperienceServerDto getMyAbilityExperiences(@PathVariable("ability") Ability ability) {
+    public ExperienceServerDto getMyAbilityExperiences(@PathVariable Ability ability) {
         return experienceService.getMyAbilityExperiences(ability);
     }
 
@@ -91,7 +91,7 @@ public class ExperienceController {
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping("/getAbilityExperiences/{ability}/{userId}")
-    public ExperienceServerDto getAbilityExperiences(@PathVariable("ability") Ability ability, @PathVariable("userId") int userId) {
+    public ExperienceServerDto getAbilityExperiences(@PathVariable Ability ability, @PathVariable int userId) {
         return experienceService.getAbilityExperiences(ability, userId);
     }
 }
