@@ -30,4 +30,9 @@ public class Experience {
     private Tier tier;
 
     private int experience;
+
+    public void increase(int amount) {
+        this.experience += amount;
+        this.tier = Tier.caculateTier(this.experience);
+    }
 }

@@ -55,4 +55,13 @@ public enum Tier {
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 계급 id입니다.");
     }
+
+    public static Tier caculateTier(int experience) {
+        for (Tier tier : Tier.values()) {
+            if (experience < tier.getRequiredExperience()) {
+                return Tier.values()[tier.ordinal() - 1];
+            }
+        }
+        return Tier.TIER5_5;
+    }
 }
