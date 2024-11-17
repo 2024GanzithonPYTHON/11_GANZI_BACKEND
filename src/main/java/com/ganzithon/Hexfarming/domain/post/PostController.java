@@ -54,7 +54,7 @@ public class PostController {
     }
 
     // 게시글 목록 조회
-    @Tag(name = "게시글 목록 조회")
+    @Tag(name = "게시글")
     @Operation(summary = "게시글 목록 조회", description = "게시글 목록을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDto.class)))
