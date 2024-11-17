@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -144,4 +145,52 @@ public class CommentService {
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    // 댓글 채택
+    @Transactional
+    public CommentResponseDto selectComment(Long postId, Long commentId, String username) {
+        Post post = getPostById(postId);
+
+        // 작성자가 맞는지 확인
+        if (!post.getWriter().getEmail().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "댓글을 채택할 권한이 없습니다.");
+        }
+
+        // remainingTime이 0인지 확인
+        if (post.getTimer().isAfter(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타이머가 아직 종료되지 않았습니다. 댓글을 채택할 수 없습니다.");
+        }
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "채택할 댓글을 찾을 수 없습니다."));
+
+        // 이미 댓글이 채택되었는지 확인
+        if (comment.isSelected()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 채택된 댓글입니다.");
+        }
+
+        // 댓글 채택
+        comment.setSelected(true);
+        commentRepository.save(comment);
+
+        return mapToDto(comment);
+    }
+
+    // 채택된 댓글 조회
+    @Transactional(readOnly = true)
+    public CommentResponseDto getSelectedComment(Long postId) {
+        Comment selectedComment = commentRepository.findByPost_PostIdAndSelectedTrue(postId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "채택된 댓글이 없습니다."));
+
+        return new CommentResponseDto(
+                selectedComment.getId(),
+                selectedComment.getContent(),
+                selectedComment.getWriterNickname(),
+                selectedComment.getCreatedAt(),
+                selectedComment.getScore()
+        );
+    }
+
+
+
 }

@@ -95,4 +95,33 @@ public class CommentController {
         commentService.deleteComment(postId, commentId, username);
         return ResponseEntity.noContent().build();
     }
+
+    // 댓글 채택 API
+    @Tag(name = "댓글")
+    @Operation(summary = "댓글 채택", description = "댓글을 채택한다.")
+    @PostMapping("/{postId}/{commentId}/accept")
+    public ResponseEntity<CommentResponseDto> selectComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body(null);
+        }
+
+        String username = authentication.getName();
+
+        CommentResponseDto selectedComment = commentService.selectComment(postId, commentId, username);
+
+        return ResponseEntity.ok(selectedComment);
+    }
+
+    // 채택된 댓글 조회 API
+    @Tag(name = "댓글")
+    @Operation(summary = "채택된 댓글 조회", description = "채택된 댓글을 조회한다.")
+    @GetMapping("/{postId}/{commentId}/accepted")
+    public ResponseEntity<CommentResponseDto> getSelectedComment(@PathVariable Long postId) {
+        CommentResponseDto selectedComment = commentService.getSelectedComment(postId);
+        return ResponseEntity.ok(selectedComment);
+    }
 }

@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.post;
 
+import com.ganzithon.Hexfarming.domain.comment.Comment;
 import com.ganzithon.Hexfarming.domain.experience.ExperienceService;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
@@ -169,6 +170,35 @@ public class PostService {
                         experienceService.inceaseExperience(writerId, post.getAbility(), getAverageScoreByPostId(post.getPostId()));
                         post.setTimerOver(true);
                     });
+        }
+    }
+
+    @Transactional
+    public void processPostAfterTimerEnds(Post post) {
+        try {
+            List<Comment> comments = commentRepository.findByPost_PostId(post.getPostId());
+            if (!comments.isEmpty()) {
+                // 댓글 랜덤 선택 (혹은 다른 기준으로 선택 가능)
+                Comment selectedComment = comments.get(0); // 첫 번째 댓글로 채택 (임시 로직)
+                selectedComment.setSelected(true);
+                commentRepository.save(selectedComment);
+
+                // 채택된 댓글 작성자에게 경험치 지급
+                experienceService.inceaseExperience(
+                        selectedComment.getWriter().getId(),
+                        post.getAbility(),
+                        post.getScoreSum() // 총점 혹은 평균 점수
+                );
+            }
+
+            // 게시글 타이머 종료 상태 업데이트
+            post.setTimerOver(true);
+            postRepository.save(post);
+
+        } catch (Exception e) {
+            // 오류 발생 시 처리
+            System.err.println("Timer processing failed for post ID: " + post.getPostId());
+            e.printStackTrace();
         }
     }
 

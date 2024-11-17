@@ -34,4 +34,16 @@ public class Comment {
 
     @Column
     private int score; // 점수
+
+    @Column(nullable = false)
+    private boolean selected = false;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
 }
