@@ -64,4 +64,10 @@ public class ExperienceService {
                 .map(ExperienceServerDto::from)
                 .collect(Collectors.toList());
     }
+
+    @Transactional()
+    public void inceaseExperience(int userId, Ability ability, int amount) {
+        Experience theExperience = experienceRepository.findByUserIdAndAbility(userId, ability).get();
+        theExperience.increase(amount);
+    }
 }
