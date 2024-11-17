@@ -28,7 +28,7 @@ public class PostRequestDto {
         return ability;
     }
 
-    public void setCategory(Ability ability) {
+    public void setAbility(Ability ability) {
         this.ability = ability;
     }
 

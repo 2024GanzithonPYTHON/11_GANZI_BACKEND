@@ -10,6 +10,7 @@ import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import com.ganzithon.Hexfarming.global.enumeration.Tier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -63,6 +64,20 @@ public class ExperienceService {
         return experiences.stream()
                 .map(ExperienceServerDto::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public ExperienceServerDto getMyAbilityExperiences(Ability ability) {
+        int nowUserId = customUserDetailsService.getCurrentUserDetails().getUser().getId();
+        return getAbilityExperiences(ability, nowUserId);
+    }
+
+    @Transactional(readOnly = true)
+    public ExperienceServerDto getAbilityExperiences(Ability ability, int userId) {
+        Experience experience = experienceRepository.findByUserIdAndAbility(userId, ability)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."));
+
+        return ExperienceServerDto.from(experience);
     }
 
     @Transactional()

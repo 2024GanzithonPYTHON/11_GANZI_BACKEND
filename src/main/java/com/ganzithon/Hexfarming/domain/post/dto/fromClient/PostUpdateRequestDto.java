@@ -3,7 +3,7 @@ package com.ganzithon.Hexfarming.domain.post.dto.fromClient;
 public class PostUpdateRequestDto {
     private String title;
     private String content;
-    private String category;
+    private String ability;
 
 
     public String getTitle() {
@@ -22,11 +22,11 @@ public class PostUpdateRequestDto {
         this.content = content;
     }
 
-    public String getCategory() {
-        return category;
+    public String getAbility() {
+        return ability;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setAbility(String ability) {
+        this.ability = ability;
     }
 }
