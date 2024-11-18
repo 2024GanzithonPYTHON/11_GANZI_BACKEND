@@ -4,6 +4,7 @@ import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.AverageScoreResponseDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -156,7 +157,7 @@ public class PostController {
     @Tag(name = "게시글")
     @Operation(summary = "전체 카테고리 검색", description = "입력어가 포함된 제목을 가진 게시글을 전체 카테고리에서 찾는다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
+            @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping("searchAllPost/{searchTitleText}")
@@ -168,12 +169,24 @@ public class PostController {
     @Tag(name = "게시글")
     @Operation(summary = "특정 카테고리 검색", description = "입력어가 포함된 제목을 가진 게시글을 특정 카테고리에서 찾는다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
+            @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
     @GetMapping("searchPost/{ability}/{searchTitleText}")
     public List<PostResponseDto> searchPost(@PathVariable Ability ability, @PathVariable String searchTitleText) {
         return postService.searchPost(searchTitleText, ability);
+    }
+
+    // 특정 카테고리 검색
+    @Tag(name = "게시글")
+    @Operation(summary = "가장 최신 글 가져오기", description = "각 카테고리 별 가장 최근에 올라온 게시글 하나의 정보를 반환한다. 각 역량 별 하나씩 총 6개를 반환한다.\n\n해당 카테고리에 작성된 글이 없을 시, postId를 -1으로 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostTitleServerDto.class))))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping("getLatestPosts")
+    public List<PostTitleServerDto> getLatestPosts() {
+        return postService.getLatestPosts();
     }
 }
 
