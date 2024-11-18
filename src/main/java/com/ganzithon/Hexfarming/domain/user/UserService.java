@@ -6,10 +6,10 @@ import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckPasswordServerDt
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.ResponseTokenServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerDto;
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.UserInformationServerDto;
-import com.ganzithon.Hexfarming.domain.user.util.UserConstants;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
+import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import com.ganzithon.Hexfarming.global.utility.PasswordEncoderManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class UserService {
         String password = dto.password();
 
         User existUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, UserConstants.INVALID_EMAIL_OR_PASSWORD));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.INVALID_EMAIL_OR_PASSWORD.getMessage()));
 
         if (passwordEncoderManager.matches(password, existUser.getPassword())) {
             String accessToken = jwtManager.createToken(existUser.getId(), false);
@@ -70,7 +70,7 @@ public class UserService {
 
             return new ResponseTokenServerDto(accessToken, refreshToken);
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserConstants.INVALID_EMAIL_OR_PASSWORD);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.INVALID_EMAIL_OR_PASSWORD.getMessage());
     }
 
     @Transactional(readOnly = true)
@@ -99,7 +99,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserInformationServerDto userInformation(int userId) {
-        User theUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, UserConstants.USER_ID_NOT_FOUND));
+        User theUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.INVALID_USER_ID.getMessage()));
         return new UserInformationServerDto(theUser.getEmail(), theUser.getName(), theUser.getNickname());
     }
 
@@ -113,7 +113,7 @@ public class UserService {
     @Transactional
     public void changePassword(ChangePasswordClientDto dto) {
         if (!UserValidator.validateRePasswordIsCorrect(dto.password(), dto.rePassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, UserConstants.INVALID_PASSWORD);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.INVALID_PASSWORD.getMessage());
         }
         UserValidator.validatePasswordLength(dto.password());
 
