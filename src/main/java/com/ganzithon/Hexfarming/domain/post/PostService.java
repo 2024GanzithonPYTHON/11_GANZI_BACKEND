@@ -2,6 +2,7 @@ package com.ganzithon.Hexfarming.domain.post;
 
 import com.ganzithon.Hexfarming.domain.comment.Comment;
 import com.ganzithon.Hexfarming.domain.experience.ExperienceService;
+import com.ganzithon.Hexfarming.domain.notification.NotificationService;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
@@ -25,14 +26,17 @@ import java.util.Optional;
 public class PostService {
 
     private final ExperienceService experienceService;
+    private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final JwtManager jwtManager; // JWT 토큰 처리 클래스
 
     @Autowired
-    public PostService(ExperienceService experienceService, PostRepository postRepository, UserRepository userRepository, JwtManager jwtManager, CommentRepository commentRepository) {
+    public PostService(ExperienceService experienceService, NotificationService notificationService, PostRepository postRepository,
+                       UserRepository userRepository, JwtManager jwtManager, CommentRepository commentRepository) {
         this.experienceService = experienceService;
+        this.notificationService = notificationService;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.jwtManager = jwtManager;
@@ -169,6 +173,7 @@ public class PostService {
                         int writerId = post.getWriter().getId();
                         experienceService.inceaseExperience(writerId, post.getAbility(), getAverageScoreByPostId(post.getPostId()));
                         post.setTimerOver(true);
+                        notificationService.saveCheckPoints(post);
                     });
         }
     }
