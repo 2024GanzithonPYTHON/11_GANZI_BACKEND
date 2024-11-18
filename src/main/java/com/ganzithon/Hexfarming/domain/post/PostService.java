@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -207,6 +208,22 @@ public class PostService {
             System.err.println("Timer processing failed for post ID: " + post.getPostId());
             e.printStackTrace();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> searchPost(String titleContains, Ability ability) {
+        Optional<List<Post>> postsOptional = postRepository.findByTitleContaining(titleContains);
+        if (ability != null) {
+            postsOptional = postRepository.findByTitleContainingAndAbility(titleContains, ability);
+        }
+
+        if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return postsOptional.get().stream()
+                .map(PostResponseDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     // 전체 카테고리: 조회수 기준 상위 2개 게시물 반환

@@ -1,6 +1,8 @@
 package com.ganzithon.Hexfarming.domain.post;
 
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
+import com.ganzithon.Hexfarming.global.enumeration.Ability;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -32,4 +34,6 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     // 카테고리별: 마감 임박 게시글 상위 2개 가져오기
     @Query("SELECT p FROM Post p WHERE p.ability = :ability AND p.isTimerOver = false ORDER BY p.timer ASC")
     List<Post> findTopByCategoryAndOrderByTimerAsc(@Param("ability") Ability ability, Pageable pageable);
+    Optional<List<Post>> findByTitleContaining(String titleContains);
+    Optional<List<Post>> findByTitleContainingAndAbility(String titleContains, Ability ability);
 }
