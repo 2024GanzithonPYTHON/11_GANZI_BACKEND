@@ -190,16 +190,28 @@ public class PostController {
         return postService.getLatestPosts();
     }
 
-    // 특정 카테고리 검색
+    // 내가 쓴 게시글 수 조회
     @Tag(name = "게시글")
     @Operation(summary = "내가 쓴 게시글 수 조회", description = "각 카테고리 별로 내가 작성한 게시글의 수를 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MyPostCountServerDto.class)))
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MyPostCountServerDto.class)))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    @GetMapping("/getMyPostCount")
-    public MyPostCountServerDto getMyPostCount() {
-        return postService.getMyPostCount();
+    @GetMapping("/getMyPostsCount")
+    public MyPostCountServerDto getMyPostsCount() {
+        return postService.getMyPostsCount();
+    }
+
+    // 내가 쓴 게시글 카테고리 별로 조회
+    @Tag(name = "게시글")
+    @Operation(summary = "내가 쓴 게시글 카테고리 별 조회", description = "특정 카테고리에 내가 작성한 게시글 목록을 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping("/getMyPostsByAbility/{ability}")
+    public List<PostResponseDto> getMyPostsByAbility(@PathVariable Ability ability) {
+        return postService.getMyPostsByAbility(ability);
     }
 }
 

@@ -215,9 +215,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> searchPost(String titleContains, Ability ability) {
-        Optional<List<Post>> postsOptional = postRepository.findByTitleContaining(titleContains);
+        Optional<List<Post>> postsOptional = postRepository.findAllByTitleContaining(titleContains);
         if (ability != null) {
-            postsOptional = postRepository.findByTitleContainingAndAbility(titleContains, ability);
+            postsOptional = postRepository.findAllByTitleContainingAndAbility(titleContains, ability);
         }
 
         if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
@@ -285,7 +285,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public MyPostCountServerDto getMyPostCount() {
+    public MyPostCountServerDto getMyPostsCount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용자가 인증되지 않았습니다.");
@@ -304,5 +304,25 @@ public class PostService {
         return new MyPostCountServerDto(totalCount, leadershipCount, creativityCount, communicationCount,
                 diligenceCount, resilienceCount, tenacityCount);
     }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getMyPostsByAbility(Ability ability) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용자가 인증되지 않았습니다.");
+        }
+        CustomUserDetails nowUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        int nowUserId = nowUserDetails.getUser().getId();
+
+        Optional<List<Post>> postsOptional = postRepository.findAllByWriterIdAndAbility(nowUserId, ability);
+        if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return postsOptional.get().stream()
+                .map(PostResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+
 
 }
