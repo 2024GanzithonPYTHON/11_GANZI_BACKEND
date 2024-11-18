@@ -4,6 +4,7 @@ import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.AverageScoreResponseDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
+import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,10 +12,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -108,6 +112,44 @@ public class PostController {
 
         AverageScoreResponseDto responseDto = new AverageScoreResponseDto(postId, averageScore);
         return ResponseEntity.ok(responseDto);
+    }
+
+    // 전체 카테고리: 조회수 기준 상위 2개 게시물 반환
+    @Tag(name = "게시글")
+    @Operation(summary = "전체 카테고리에서 조회수 높은 게시글 상위 2개 조회", description = "전체 카테고리에서 조회수 높은 게시글 상위 2개를 조회한다.")
+    @GetMapping("/top")
+    public List<PostResponseDto> getTop2PostsByView() {
+        return postService.getTop2PostsByView();
+    }
+
+    // 카테고리별: 조회수 기준 상위 2개 게시물 반환
+    @Tag(name = "게시글")
+    @Operation(summary = "카테고리별 조회수 높은 게시글 상위 2개 조회", description = "특정 카테고리에서 조회수 높은 게시글 상위 2개를 조회한다.")
+    @GetMapping("/top-by-ability/{ability}")
+    public List<PostResponseDto> getTop2PostsByCategory(@PathVariable("ability") String ability) {
+        return postService.getTop2PostsByCategory(Ability.valueOf(ability.toUpperCase()));
+    }
+
+    // 전체 카테고리: 마감 임박 게시글 상위 2개 반환
+    @Tag(name = "게시글")
+    @Operation(summary = "전체 카테고리에서 마감시간 임박한 게시글 2개 조회", description = "전체 카테고리에서 마감시간 임박한 게시글 2개를 조회한다.")
+    @GetMapping("/expiring")
+    public List<PostResponseDto> getTop2ExpiringPosts() {
+        return postService.getTop2ExpiringPosts();
+    }
+
+    // 카테고리별: 마감 임박 게시글 상위 2개 반환
+    @Tag(name = "게시글")
+    @Operation(summary = "카테고리별 마감시간 임박한 게시글 2개 조회", description = "특정 카테고리에서 마감시간 임박한 게시글 2개를 조회한다.")
+    @GetMapping("/expiring/{ability}")
+    public List<PostResponseDto> getTop2ExpiringPostsByCategory(@PathVariable("ability") String ability) {
+        Ability parsedAbility;
+        try {
+            parsedAbility = Ability.valueOf(ability.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ability: " + ability);
+        }
+        return postService.getTop2ExpiringPostsByCategory(parsedAbility);
     }
 
 
