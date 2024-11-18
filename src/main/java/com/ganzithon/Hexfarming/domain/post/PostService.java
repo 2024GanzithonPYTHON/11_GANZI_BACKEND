@@ -211,7 +211,7 @@ public class PostService {
     public List<PostResponseDto> searchPost(String titleContains, Ability ability) {
         Optional<List<Post>> postsOptional = postRepository.findByTitleContaining(titleContains);
         if (ability != null) {
-            postsOptional = postRepository.findByTitleContainingAndAbility(titleContains, ability)
+            postsOptional = postRepository.findByTitleContainingAndAbility(titleContains, ability);
         }
 
         if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
