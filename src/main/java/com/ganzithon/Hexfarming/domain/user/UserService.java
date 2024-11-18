@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service // Service 클래스(로직을 처리)임을 알려줌
 public class UserService {
     private final UserRepository userRepository;
@@ -66,10 +68,8 @@ public class UserService {
         String password = dto.password();
 
         // 해당 email으로 등록된 유저가 있는지 확인하고 없으면 예외
-        User existUser = userRepository.findByEmail(email);
-        if (existUser == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 잘못되었습니다.");
-        }
+        User existUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 잘못되었습니다."));
 
         // 패스워드가 일치하는지 확인 후 토큰 반환
         if (passwordEncoderManager.matches(password, existUser.getPassword())) {
@@ -107,7 +107,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserInformationServerDto userInformation(int userId) {
-        User theUser = userRepository.findById(userId);
+        User theUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저id입니다."));
         return new UserInformationServerDto(theUser.getEmail(), theUser.getName(), theUser.getNickname());
     }
 
