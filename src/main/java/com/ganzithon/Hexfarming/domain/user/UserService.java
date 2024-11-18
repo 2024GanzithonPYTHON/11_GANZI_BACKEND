@@ -100,9 +100,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserInformationServerDto userInformation() {
+    public UserInformationServerDto myInformation() {
         CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
-        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getName(), nowUser.getNickname());
+        return userInformation(nowUser.getUser().getId());
+    }
+
+    @Transactional(readOnly = true)
+    public UserInformationServerDto userInformation(int userId) {
+        User theUser = userRepository.findById(userId);
+        return new UserInformationServerDto(theUser.getEmail(), theUser.getName(), theUser.getNickname());
     }
 
     @Transactional(readOnly = true)
