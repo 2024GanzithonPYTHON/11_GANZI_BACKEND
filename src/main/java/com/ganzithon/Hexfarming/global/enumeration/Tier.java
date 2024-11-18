@@ -47,13 +47,13 @@ public enum Tier {
         this.requiredExperience = requiredExperience;
     }
 
-    public static Tier fromId(int id) { // 계급 id로부터 Tier Enum 값을 찾아서 반환
+    public static Tier fromId(int id) {
         for (Tier tier : Tier.values()) {
             if (tier.getId() == id) {
                 return tier;
             }
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 계급 id입니다.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.INVALID_TIER_ID.getMessage());
     }
 
     public static Tier caculateTier(int experience) {
