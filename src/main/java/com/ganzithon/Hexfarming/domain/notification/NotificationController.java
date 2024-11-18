@@ -1,6 +1,7 @@
 package com.ganzithon.Hexfarming.domain.notification;
 
 import com.ganzithon.Hexfarming.domain.notification.dto.fromClient.DeleteNotificationClientDto;
+import com.ganzithon.Hexfarming.domain.notification.dto.fromServer.ResponseNotificationCountServerDto;
 import com.ganzithon.Hexfarming.domain.notification.dto.fromServer.ResponseNotificationServerDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,6 +25,17 @@ import java.util.List;
 public class NotificationController {
     @Autowired
     NotificationService notificationService;
+
+    @Tag(name = "알림")
+    @Operation(summary = "내 알림 개수", description = "내가 받은 알림들의 총 개수를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseNotificationCountServerDto.class)))),
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping("/myNotificationCount")
+    public ResponseNotificationCountServerDto myNotificationCount() {
+        return notificationService.myNotificationCount();
+    }
 
     @Tag(name = "알림")
     @Operation(summary = "내 알림 보기", description = "내가 받은 알림들을 조회한다.")

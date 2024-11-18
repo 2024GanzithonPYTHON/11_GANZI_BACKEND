@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
     Optional<List<Notification>> findAllByUserId(int userId);
+    Optional<Integer> countByUserId(int userId);
 }

@@ -1,6 +1,7 @@
 package com.ganzithon.Hexfarming.domain.notification;
 
 import com.ganzithon.Hexfarming.domain.notification.dto.fromClient.DeleteNotificationClientDto;
+import com.ganzithon.Hexfarming.domain.notification.dto.fromServer.ResponseNotificationCountServerDto;
 import com.ganzithon.Hexfarming.domain.notification.dto.fromServer.ResponseNotificationServerDto;
 import com.ganzithon.Hexfarming.domain.post.Post;
 import com.ganzithon.Hexfarming.domain.user.User;
@@ -27,6 +28,13 @@ public class NotificationService {
     public NotificationService(NotificationRepository notificationRepository, CustomUserDetailsService customUserDetailsService) {
         this.notificationRepository = notificationRepository;
         this.customUserDetailsService = customUserDetailsService;
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseNotificationCountServerDto myNotificationCount() {
+        int nowUserId = customUserDetailsService.getCurrentUserDetails().getUser().getId();
+        Optional<Integer> notificationCount = notificationRepository.countByUserId(nowUserId);
+        return notificationCount.isPresent() ? new ResponseNotificationCountServerDto(notificationCount.get()) : new ResponseNotificationCountServerDto(0);
     }
 
     @Transactional(readOnly = true)
