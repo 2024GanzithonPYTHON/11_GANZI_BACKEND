@@ -47,6 +47,7 @@ public class UserService {
         User newUser = User.builder()
                 .email(dto.email())
                 .password(hashedPassword)
+                .name(dto.name())
                 .nickname(dto.nickname())
                 .build();
         userRepository.save(newUser);
@@ -101,7 +102,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserInformationServerDto userInformation() {
         CustomUserDetails nowUser = customUserDetailsService.getCurrentUserDetails();
-        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getNickname());
+        return new UserInformationServerDto(nowUser.getUsername(), nowUser.getName(), nowUser.getNickname());
     }
 
     @Transactional(readOnly = true)
