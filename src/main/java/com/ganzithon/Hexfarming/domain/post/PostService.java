@@ -12,6 +12,8 @@ import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -220,6 +226,46 @@ public class PostService {
         return postsOptional.get().stream()
                 .map(PostResponseDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    // 전체 카테고리: 조회수 기준 상위 2개 게시물 반환
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getTop2PostsByView() {
+        Pageable pageable = PageRequest.of(0, 2); // 0번째 페이지에서 2개만 가져오기
+        List<Post> topPosts = postRepository.findTopByOrderByViewDesc(pageable);
+        return topPosts.stream()
+                .map(PostResponseDto::fromEntity)
+                .toList();
+    }
+
+    // 카테고리별: 조회수 기준 상위 2개 게시물 반환
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getTop2PostsByCategory(Ability ability) {
+        Pageable pageable = PageRequest.of(0, 2); // 0번째 페이지에서 2개만 가져오기
+        List<Post> posts = postRepository.findTopByCategoryOrderByViewDesc(ability, pageable);
+        return posts.stream()
+                .map(PostResponseDto::fromEntity)
+                .toList();
+    }
+
+    // 전체 카테고리: 마감 임박 게시글 상위 2개 반환
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getTop2ExpiringPosts() {
+        Pageable pageable = PageRequest.of(0, 2);
+        List<Post> posts = postRepository.findTopByOrderByTimerAsc(pageable);
+        return posts.stream()
+                .map(PostResponseDto::fromEntity)
+                .toList();
+    }
+
+    // 카테고리별: 마감 임박 게시글 상위 2개 반환
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getTop2ExpiringPostsByCategory(Ability ability) {
+        Pageable pageable = PageRequest.of(0, 2); // 0번째 페이지에서 2개만 가져오기
+        List<Post> posts = postRepository.findTopByCategoryAndOrderByTimerAsc(ability, pageable);
+        return posts.stream()
+                .map(PostResponseDto::fromEntity)
+                .toList();
     }
 
     @Transactional(readOnly = true)
