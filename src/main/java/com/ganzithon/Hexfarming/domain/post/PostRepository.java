@@ -37,4 +37,7 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     Optional<List<Post>> findByTitleContaining(String titleContains);
     Optional<List<Post>> findByTitleContainingAndAbility(String titleContains, Ability ability);
     Optional<Post> findFirstByAbilityOrderByCreatedAtDesc(Ability ability);
+
+    int countByWriterId(int writerId);
+    int countByWriterIdAndAbility(int writerId, Ability ability);
 }

@@ -3,6 +3,7 @@ package com.ganzithon.Hexfarming.domain.post;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.AverageScoreResponseDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.MyPostCountServerDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
@@ -160,7 +161,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    @GetMapping("searchAllPost/{searchTitleText}")
+    @GetMapping("/searchAllPost/{searchTitleText}")
     public List<PostResponseDto> searchAllPost(@PathVariable String searchTitleText) {
         return postService.searchPost(searchTitleText, null);
     }
@@ -172,7 +173,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    @GetMapping("searchPost/{ability}/{searchTitleText}")
+    @GetMapping("/searchPost/{ability}/{searchTitleText}")
     public List<PostResponseDto> searchPost(@PathVariable Ability ability, @PathVariable String searchTitleText) {
         return postService.searchPost(searchTitleText, ability);
     }
@@ -184,9 +185,21 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostTitleServerDto.class))))
     })
     @CrossOrigin(origins = "*", methods = RequestMethod.GET)
-    @GetMapping("getLatestPosts")
+    @GetMapping("/getLatestPosts")
     public List<PostTitleServerDto> getLatestPosts() {
         return postService.getLatestPosts();
+    }
+
+    // 특정 카테고리 검색
+    @Tag(name = "게시글")
+    @Operation(summary = "내가 쓴 게시글 수 조회", description = "각 카테고리 별로 내가 작성한 게시글의 수를 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MyPostCountServerDto.class)))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping("/getMyPostCount")
+    public MyPostCountServerDto getMyPostCount() {
+        return postService.getMyPostCount();
     }
 }
 
