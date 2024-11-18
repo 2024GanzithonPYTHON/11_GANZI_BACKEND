@@ -8,6 +8,7 @@ import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
+import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -202,6 +205,22 @@ public class PostService {
             System.err.println("Timer processing failed for post ID: " + post.getPostId());
             e.printStackTrace();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> searchPost(String titleContains, Ability ability) {
+        Optional<List<Post>> postsOptional = postRepository.findByTitleContaining(titleContains);
+        if (ability != null) {
+            postsOptional = postRepository.findByTitleContainingAndAbility(titleContains, ability)
+        }
+
+        if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return postsOptional.get().stream()
+                .map(PostResponseDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
 }
