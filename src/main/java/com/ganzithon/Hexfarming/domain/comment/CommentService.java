@@ -94,10 +94,7 @@ public class CommentService {
 
     // 유틸리티 메서드
     private User getUserByUsername(String username) {
-        User user = userRepository.findByEmail(username);
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "작성자를 찾을 수 없습니다.");
-        }
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성자를 찾을 수 없습니다."));
         return user;
     }
 
