@@ -5,10 +5,12 @@ import com.ganzithon.Hexfarming.domain.experience.ExperienceService;
 import com.ganzithon.Hexfarming.domain.notification.NotificationService;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.MyPostCountServerDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
+import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,6 @@ import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -214,9 +215,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> searchPost(String titleContains, Ability ability) {
-        Optional<List<Post>> postsOptional = postRepository.findByTitleContaining(titleContains);
+        Optional<List<Post>> postsOptional = postRepository.findAllByTitleContaining(titleContains);
         if (ability != null) {
-            postsOptional = postRepository.findByTitleContainingAndAbility(titleContains, ability);
+            postsOptional = postRepository.findAllByTitleContainingAndAbility(titleContains, ability);
         }
 
         if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
@@ -282,5 +283,46 @@ public class PostService {
         }
         return latestPosts;
     }
+
+    @Transactional(readOnly = true)
+    public MyPostCountServerDto getMyPostsCount() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용자가 인증되지 않았습니다.");
+        }
+
+        // 너무 하드코딩인데............ 리팩토링마렵다
+        CustomUserDetails nowUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        int nowUserId = nowUserDetails.getUser().getId();
+        int totalCount = postRepository.countByWriterId(nowUserId);
+        int leadershipCount = postRepository.countByWriterIdAndAbility(nowUserId, Ability.LEADERSHIP);
+        int creativityCount = postRepository.countByWriterIdAndAbility(nowUserId, Ability.CREATIVITY);
+        int communicationCount = postRepository.countByWriterIdAndAbility(nowUserId, Ability.COMMUNICATION_SKILL);
+        int diligenceCount = postRepository.countByWriterIdAndAbility(nowUserId, Ability.DILIGENCE);
+        int resilienceCount = postRepository.countByWriterIdAndAbility(nowUserId, Ability.RESILIENCE);
+        int tenacityCount = postRepository.countByWriterIdAndAbility(nowUserId, Ability.TENACITY);
+        return new MyPostCountServerDto(totalCount, leadershipCount, creativityCount, communicationCount,
+                diligenceCount, resilienceCount, tenacityCount);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getMyPostsByAbility(Ability ability) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용자가 인증되지 않았습니다.");
+        }
+        CustomUserDetails nowUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        int nowUserId = nowUserDetails.getUser().getId();
+
+        Optional<List<Post>> postsOptional = postRepository.findAllByWriterIdAndAbility(nowUserId, ability);
+        if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return postsOptional.get().stream()
+                .map(PostResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+
 
 }
