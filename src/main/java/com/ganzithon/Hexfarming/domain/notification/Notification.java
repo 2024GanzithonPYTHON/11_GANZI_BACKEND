@@ -26,6 +26,8 @@ public class Notification {
     @JoinColumn(name = "postId")
     private Post post;
 
+    private boolean isCheckPoints;
+
     @Column(length = 1000)
     private String message;
 }

@@ -65,6 +65,7 @@ public class NotificationService {
         Notification newNotification = Notification.builder()
                 .post(post)
                 .user(post.getWriter())
+                .isCheckPoints(true)
                 .message(String.format(checkPointMessage, post.getTitle()))
                 .build();
         notificationRepository.save(newNotification);
@@ -75,6 +76,7 @@ public class NotificationService {
         Notification newNotification = Notification.builder()
                 .post(post)
                 .user(post.getWriter())
+                .isCheckPoints(false)
                 .message(String.format(checkFeedback, post.getTitle(), user.getNickname()))
                 .build();
         notificationRepository.save(newNotification);

@@ -38,7 +38,7 @@ public class NotificationController {
     }
 
     @Tag(name = "알림")
-    @Operation(summary = "내 알림 보기", description = "내가 받은 알림들을 조회한다.")
+    @Operation(summary = "내 알림 보기", description = "내가 받은 알림들을 조회한다.\n\n(isCheckPoints가 true인 알림(24시간이 지난 후 점수 확인 알림)을 누르면 자신의 게시글에 달린 피드백 채택하는 장면으로 넘어가야 함)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseNotificationServerDto.class)))),
     })
