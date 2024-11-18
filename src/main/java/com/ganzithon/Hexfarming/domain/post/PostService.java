@@ -56,10 +56,7 @@ public class PostService {
         String username = authentication.getName();
         System.out.println("인증된 사용자: " + username);
 
-        User writer = userRepository.findByEmail(username);
-        if (writer == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "작성자를 찾을 수 없습니다.");
-        }
+        User writer = userRepository.findByEmail(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성자를 찾을 수 없습니다."));
         System.out.println("작성자 정보: " + writer);
 
         Post post = new Post();
