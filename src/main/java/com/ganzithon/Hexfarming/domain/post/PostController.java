@@ -5,6 +5,7 @@ import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.AverageScoreResponseDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -108,6 +109,18 @@ public class PostController {
 
         AverageScoreResponseDto responseDto = new AverageScoreResponseDto(postId, averageScore);
         return ResponseEntity.ok(responseDto);
+    }
+
+    // 전체 카테고리 검색
+    @Tag(name = "게시글")
+    @Operation(summary = "전체 카테고리 검색", description = "입력어가 포함된 제목을 가진 게시글을 전체 카테고리에서 찾는다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @GetMapping("searchAllPost/{searchTitleText}")
+    public List<PostResponseDto> searchAllPost(@PathVariable String searchTitleText) {
+        return postService.searchPost(searchTitleText, null);
     }
 
 
