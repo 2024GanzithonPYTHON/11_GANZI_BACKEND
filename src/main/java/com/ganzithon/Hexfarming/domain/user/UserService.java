@@ -8,6 +8,7 @@ import com.ganzithon.Hexfarming.domain.user.dto.fromServer.CheckDuplicateServerD
 import com.ganzithon.Hexfarming.domain.user.dto.fromServer.UserInformationServerDto;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetailsService;
+import com.ganzithon.Hexfarming.domain.user.util.UserBuilder;
 import com.ganzithon.Hexfarming.domain.user.util.UserValidator;
 import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
 import com.ganzithon.Hexfarming.global.utility.JwtManager;
@@ -41,13 +42,9 @@ public class UserService {
         UserValidator.validatePasswordLength(dto.password());
         String hashedPassword = passwordEncoderManager.encode(dto.password());
 
-        User newUser = User.builder()
-                .email(dto.email())
-                .password(hashedPassword)
-                .name(dto.name())
-                .nickname(dto.nickname())
-                .build();
+        User newUser = UserBuilder.build(dto.email(), hashedPassword, dto.name(), dto.nickname());
         userRepository.save(newUser);
+
         experienceService.initiateAbilityExperience(newUser);
 
         String accessToken = jwtManager.createToken(newUser.getId(), false);
