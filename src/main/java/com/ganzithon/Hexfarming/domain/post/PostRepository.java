@@ -36,4 +36,5 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     List<Post> findTopByCategoryAndOrderByTimerAsc(@Param("ability") Ability ability, Pageable pageable);
     Optional<List<Post>> findByTitleContaining(String titleContains);
     Optional<List<Post>> findByTitleContainingAndAbility(String titleContains, Ability ability);
+    Optional<Post> findFirstByAbilityOrderByCreatedAtDesc(Ability ability);
 }

@@ -6,6 +6,7 @@ import com.ganzithon.Hexfarming.domain.notification.NotificationService;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -264,6 +266,21 @@ public class PostService {
         return posts.stream()
                 .map(PostResponseDto::fromEntity)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostTitleServerDto> getLatestPosts() {
+        List<PostTitleServerDto> latestPosts = new ArrayList<>();
+        for(Ability ability : Ability.values()) {
+            Optional<Post> postsOptional = postRepository.findFirstByAbilityOrderByCreatedAtDesc(ability);
+            if (postsOptional.isEmpty()) {
+                latestPosts.add(new PostTitleServerDto(-1, ability, null));
+                continue;
+            }
+            Post post = postsOptional.get();
+            latestPosts.add(new PostTitleServerDto(post.getPostId(), post.getAbility(), post.getTitle()));
+        }
+        return latestPosts;
     }
 
 }
