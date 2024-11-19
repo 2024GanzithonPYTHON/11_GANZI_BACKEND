@@ -3,6 +3,7 @@ package com.ganzithon.Hexfarming.domain.post;
 import com.ganzithon.Hexfarming.domain.comment.Comment;
 import com.ganzithon.Hexfarming.domain.experience.ExperienceService;
 import com.ganzithon.Hexfarming.domain.notification.NotificationService;
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.DeletePictureClientDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.MyPostCountServerDto;
@@ -337,4 +338,11 @@ public class PostService {
         }
     }
 
+    public void deletePicture(DeletePictureClientDto dto) {
+        try {
+            s3Manager.delete(dto.pictureUrl());
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_DELETE_FILE.getMessage());
+        }
+    }
 }

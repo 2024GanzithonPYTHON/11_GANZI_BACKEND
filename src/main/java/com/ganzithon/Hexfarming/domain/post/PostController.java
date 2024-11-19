@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.post;
 
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.DeletePictureClientDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.*;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -226,6 +228,19 @@ public class PostController {
             @RequestParam()
             MultipartFile multipartFile) {
         return postService.uploadPicture(multipartFile);
+    }
+
+    // S3에 올라간 사진 삭제
+    @Tag(name = "게시글")
+    @Operation(summary = "S3의 사진 삭제", description = "S3 서버에 업로드된 사진을 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "삭제 성공", content = @Content(mediaType = "application/json"))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    @DeleteMapping(value = "/deletePicture")
+    public ResponseEntity<Void> deletePicture(@RequestBody DeletePictureClientDto dto) {
+        postService.deletePicture(dto);
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 }
 
