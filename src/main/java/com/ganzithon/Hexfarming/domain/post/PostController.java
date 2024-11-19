@@ -2,12 +2,10 @@ package com.ganzithon.Hexfarming.domain.post;
 
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
-import com.ganzithon.Hexfarming.domain.post.dto.fromServer.AverageScoreResponseDto;
-import com.ganzithon.Hexfarming.domain.post.dto.fromServer.MyPostCountServerDto;
-import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
-import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.*;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,8 +14,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -212,6 +212,20 @@ public class PostController {
     @GetMapping("/getMyPostsByAbility/{ability}")
     public List<PostResponseDto> getMyPostsByAbility(@PathVariable Ability ability) {
         return postService.getMyPostsByAbility(ability);
+    }
+
+    // S3에 사진 올리기
+    @Tag(name = "게시글")
+    @Operation(summary = "S3에 사진 올리기", description = "S3 서버에 사진을 업로드한 후 Url을 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json"))
+    })
+    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @PostMapping(value = "/uploadPicture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public PictureUrlServerDto uploadPicture(
+            @RequestParam()
+            MultipartFile multipartFile) {
+        return postService.uploadPicture(multipartFile);
     }
 }
 
