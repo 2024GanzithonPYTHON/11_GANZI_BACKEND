@@ -3,16 +3,20 @@ package com.ganzithon.Hexfarming.domain.post;
 import com.ganzithon.Hexfarming.domain.comment.Comment;
 import com.ganzithon.Hexfarming.domain.experience.ExperienceService;
 import com.ganzithon.Hexfarming.domain.notification.NotificationService;
+import com.ganzithon.Hexfarming.domain.post.dto.fromClient.DeletePictureClientDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromClient.PostUpdateRequestDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.MyPostCountServerDto;
+import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PictureUrlServerDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostResponseDto;
 import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
+import com.ganzithon.Hexfarming.global.GlobalConstants;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
-import com.ganzithon.Hexfarming.global.utility.JwtManager;
+import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
+import com.ganzithon.Hexfarming.global.utility.S3Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +26,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import com.ganzithon.Hexfarming.domain.comment.CommentRepository;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -39,17 +46,17 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final JwtManager jwtManager; // JWT 토큰 처리 클래스
+    private final S3Manager s3Manager;
 
     @Autowired
     public PostService(ExperienceService experienceService, NotificationService notificationService, PostRepository postRepository,
-                       UserRepository userRepository, JwtManager jwtManager, CommentRepository commentRepository) {
+                       UserRepository userRepository, CommentRepository commentRepository, S3Manager s3Manager) {
         this.experienceService = experienceService;
         this.notificationService = notificationService;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.jwtManager = jwtManager;
         this.commentRepository = commentRepository;
+        this.s3Manager = s3Manager;
     }
 
 
@@ -323,6 +330,23 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public PictureUrlServerDto uploadPicture(MultipartFile multipartFile) {
+        if (multipartFile == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_UPLOAD_FILE.getMessage());
+        }
+        try {
+            String uploadedUrl = s3Manager.upload(multipartFile, "images");
+            return new PictureUrlServerDto(uploadedUrl);
+        } catch (IOException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_UPLOAD_FILE.getMessage());
+        }
+    }
 
-
+    public void deletePicture(DeletePictureClientDto dto) {
+        try {
+            s3Manager.delete(dto.pictureUrl().replace(GlobalConstants.S3URL, ""));
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_DELETE_FILE.getMessage());
+        }
+    }
 }

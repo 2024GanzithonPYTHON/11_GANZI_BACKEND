@@ -6,6 +6,10 @@ public enum ExceptionMessage {
     INVALID_TIER_ID("잘못된 계급 id입니다."),
     INVALID_TOKEN("유효하지 않은 토큰입니다."),
     INVALID_REQUEST("잘못된 요청입니다."),
+    CANNOT_CONVERT_FILE("MultipartFIle 변환을 실패하였습니다."),
+    CANNOT_UPLOAD_FILE("파일 업로드에 실패하였습니다."),
+    CANNOT_DELETE_FILE("파일 삭제에 실패하였습니다."),
+    ONLY_IMAGE_FILE_AVAILABLE("이미지 파일만 업로드 가능합니다."),
 
     // user
     INVALID_USER_ID("잘못된 유저 id입니다."),
