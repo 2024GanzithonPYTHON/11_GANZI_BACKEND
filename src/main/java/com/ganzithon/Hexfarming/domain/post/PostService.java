@@ -14,8 +14,7 @@ import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
-import com.ganzithon.Hexfarming.global.utility.JwtManager;
-import com.ganzithon.Hexfarming.global.utility.S3Uploader;
+import com.ganzithon.Hexfarming.global.utility.S3Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,17 +44,17 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final S3Uploader s3Uploader;
+    private final S3Manager s3Manager;
 
     @Autowired
     public PostService(ExperienceService experienceService, NotificationService notificationService, PostRepository postRepository,
-                       UserRepository userRepository, CommentRepository commentRepository, S3Uploader s3Uploader) {
+                       UserRepository userRepository, CommentRepository commentRepository, S3Manager s3Manager) {
         this.experienceService = experienceService;
         this.notificationService = notificationService;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
-        this.s3Uploader = s3Uploader;
+        this.s3Manager = s3Manager;
     }
 
 
@@ -331,7 +330,7 @@ public class PostService {
 
     public PictureUrlServerDto uploadPicture(MultipartFile multipartFile) {
         try {
-            String uploadedUrl = s3Uploader.upload(multipartFile, "images");
+            String uploadedUrl = s3Manager.upload(multipartFile, "images");
             return new PictureUrlServerDto(uploadedUrl);
         } catch (IOException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_UPLOAD_FILE.getMessage());

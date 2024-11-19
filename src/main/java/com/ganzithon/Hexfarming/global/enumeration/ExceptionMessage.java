@@ -8,6 +8,7 @@ public enum ExceptionMessage {
     INVALID_REQUEST("잘못된 요청입니다."),
     CANNOT_CONVERT_FILE("MultipartFIle 변환을 실패하였습니다."),
     CANNOT_UPLOAD_FILE("파일 업로드에 실패하였습니다."),
+    CANNOT_DELETE_FILE("파일 삭제에 실패하였습니다."),
 
     // user
     INVALID_USER_ID("잘못된 유저 id입니다."),

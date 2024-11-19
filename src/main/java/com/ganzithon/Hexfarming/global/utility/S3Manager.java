@@ -1,14 +1,15 @@
 package com.ganzithon.Hexfarming.global.utility;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class S3Uploader {
+public class S3Manager {
     private final AmazonS3 amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -60,5 +61,13 @@ public class S3Uploader {
         }
 
         return Optional.of(convertFile);
+    }
+
+    public void delete(String fileName) {
+        try {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_DELETE_FILE.getMessage());
+        }
     }
 }
