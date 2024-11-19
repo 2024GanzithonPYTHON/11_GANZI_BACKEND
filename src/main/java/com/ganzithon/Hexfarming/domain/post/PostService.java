@@ -330,6 +330,9 @@ public class PostService {
     }
 
     public PictureUrlServerDto uploadPicture(MultipartFile multipartFile) {
+        if (multipartFile == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_UPLOAD_FILE.getMessage());
+        }
         try {
             String uploadedUrl = s3Manager.upload(multipartFile, "images");
             return new PictureUrlServerDto(uploadedUrl);

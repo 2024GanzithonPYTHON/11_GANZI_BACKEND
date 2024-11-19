@@ -17,12 +17,15 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class S3Manager {
+    private static final List<String> VALID_IMAGE_EXTENSIONS = Arrays.asList("png", "jpg", "jpeg", "bmp", "gif", "webp");
     private final AmazonS3 amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -54,13 +57,32 @@ public class S3Manager {
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
+        String originalFileName = file.getOriginalFilename();
+        validateFileIsImage(originalFileName);
+
+        File convertFile = new File(originalFileName);
         System.out.println(convertFile.createNewFile());
         try (FileOutputStream fileOutputStream = new FileOutputStream(convertFile)) {
             fileOutputStream.write(file.getBytes());
         }
 
         return Optional.of(convertFile);
+    }
+
+    private void validateFileIsImage(String originalFileName) {
+        String extension = getFileExtension(originalFileName);
+        if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.ONLY_IMAGE_FILE_AVAILABLE.getMessage());
+    }
+
+    private String getFileExtension(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf(".");
+        if (lastDotIndex == -1 || lastDotIndex == fileName.length() - 1) {
+            return "";
+        }
+        return fileName.substring(lastDotIndex + 1);
     }
 
     public void delete(String fileName) {
