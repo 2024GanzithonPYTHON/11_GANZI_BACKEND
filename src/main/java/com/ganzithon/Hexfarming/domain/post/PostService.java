@@ -13,6 +13,7 @@ import com.ganzithon.Hexfarming.domain.post.dto.fromServer.PostTitleServerDto;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.domain.user.UserRepository;
 import com.ganzithon.Hexfarming.domain.user.util.CustomUserDetails;
+import com.ganzithon.Hexfarming.global.GlobalConstants;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
 import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
 import com.ganzithon.Hexfarming.global.utility.S3Manager;
@@ -343,7 +344,7 @@ public class PostService {
 
     public void deletePicture(DeletePictureClientDto dto) {
         try {
-            s3Manager.delete(dto.pictureUrl());
+            s3Manager.delete(dto.pictureUrl().replace(GlobalConstants.S3URL, ""));
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.CANNOT_DELETE_FILE.getMessage());
         }
