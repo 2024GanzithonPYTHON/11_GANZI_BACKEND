@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ganzithon.Hexfarming.domain.user.util.UUIDManager;
 import com.ganzithon.Hexfarming.global.enumeration.ExceptionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,10 +58,11 @@ public class S3Manager {
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        String originalFileName = file.getOriginalFilename();
-        validateFileIsImage(originalFileName);
+        String originalExtension = getFileExtension(file.getOriginalFilename());
+        validateFileIsImage(originalExtension);
+        String randomName = UUIDManager.generateUniqueString() + "." + originalExtension;
 
-        File convertFile = new File(originalFileName);
+        File convertFile = new File(randomName);
         System.out.println(convertFile.createNewFile());
         try (FileOutputStream fileOutputStream = new FileOutputStream(convertFile)) {
             fileOutputStream.write(file.getBytes());
@@ -69,9 +71,8 @@ public class S3Manager {
         return Optional.of(convertFile);
     }
 
-    private void validateFileIsImage(String originalFileName) {
-        String extension = getFileExtension(originalFileName);
-        if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
+    private void validateFileIsImage(String fileExtension) {
+        if (VALID_IMAGE_EXTENSIONS.contains(fileExtension)) {
             return;
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessage.ONLY_IMAGE_FILE_AVAILABLE.getMessage());

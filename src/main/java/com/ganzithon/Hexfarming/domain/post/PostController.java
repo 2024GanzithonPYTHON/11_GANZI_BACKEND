@@ -232,7 +232,7 @@ public class PostController {
 
     // S3에 올라간 사진 삭제
     @Tag(name = "게시글")
-    @Operation(summary = "S3의 사진 삭제", description = "S3 서버에 업로드된 사진을 삭제한다.")
+    @Operation(summary = "S3의 사진 삭제", description = "S3 서버에 업로드된 사진을 삭제한다.\n\nUrl은 파일의 Url 전체를 입력해 주세요 (ex. https://hexfarming.s3.ap-northeast-2.amazonaws.com/images/340bef22c86b48088a76e0a117b02e39.jpg)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "삭제 성공", content = @Content(mediaType = "application/json"))
     })
