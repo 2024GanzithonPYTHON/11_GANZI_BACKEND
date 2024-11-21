@@ -186,6 +186,7 @@ public class PostService {
                         int writerId = post.getWriter().getId();
                         experienceService.inceaseExperience(writerId, post.getAbility(), getAverageScoreByPostId(post.getPostId()));
                         post.setTimerOver(true);
+                        postRepository.save(post);
                         notificationService.saveCheckPoints(post);
                     });
         }
