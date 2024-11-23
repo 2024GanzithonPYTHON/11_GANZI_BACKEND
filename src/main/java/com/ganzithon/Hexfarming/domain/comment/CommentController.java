@@ -34,7 +34,7 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "생성 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @CrossOrigin(origins = "*")
     @PostMapping("/{postId}")
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable Long postId, // URL에서 게시글 ID 받기
@@ -53,7 +53,7 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/{postId}")
     public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long postId) {
         List<CommentResponseDto> comments = commentService.getCommentsByPostId(postId);
@@ -66,7 +66,7 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.PUT)
+    @CrossOrigin(origins = "*")
     @PutMapping("/{postId}/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable Long postId,
@@ -85,7 +85,7 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/{postId}/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long postId,
@@ -100,6 +100,7 @@ public class CommentController {
     // 댓글 채택 API
     @Tag(name = "댓글")
     @Operation(summary = "댓글 채택", description = "댓글을 채택한다.")
+    @CrossOrigin(origins = "*")
     @PostMapping("/{postId}/{commentId}/accept")
     public ResponseEntity<CommentResponseDto> selectComment(
             @PathVariable Long postId,
@@ -121,6 +122,7 @@ public class CommentController {
     // 채택된 댓글 조회 API
     @Tag(name = "댓글")
     @Operation(summary = "채택된 댓글 조회", description = "채택된 댓글을 조회한다.")
+    @CrossOrigin(origins = "*")
     @GetMapping("/{postId}/{commentId}/accepted")
     public ResponseEntity<CommentResponseDto> getSelectedComment(@PathVariable Long postId) {
         CommentResponseDto selectedComment = commentService.getSelectedComment(postId);

@@ -30,7 +30,7 @@ public class ExperienceController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AbilityListServerDto.class)))),
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getAbilityList")
     public List<AbilityListServerDto> getAbilityList() {
         return experienceService.getAbilityList();
@@ -41,7 +41,7 @@ public class ExperienceController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TierListServerDto.class)))),
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getTierList")
     public List<TierListServerDto> getTierList() {
         return experienceService.getTierList();
@@ -53,7 +53,7 @@ public class ExperienceController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceServerDto.class)))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저 id", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getMyExperiences")
     public List<ExperienceServerDto> getMyExperiences() {
         return experienceService.getMyExperiences();
@@ -65,7 +65,7 @@ public class ExperienceController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceServerDto.class)))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저 id", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getExperiences/{userId}")
     public List<ExperienceServerDto> getExperiences(@PathVariable int userId) {
         return experienceService.getExperiences(userId);
@@ -77,7 +77,7 @@ public class ExperienceController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceServerDto.class))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저 id", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getMyAbilityExperiences/{ability}")
     public ExperienceServerDto getMyAbilityExperiences(@PathVariable Ability ability) {
         return experienceService.getMyAbilityExperiences(ability);
@@ -89,7 +89,7 @@ public class ExperienceController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceServerDto.class))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저 id", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getAbilityExperiences/{ability}/{userId}")
     public ExperienceServerDto getAbilityExperiences(@PathVariable Ability ability, @PathVariable int userId) {
         return experienceService.getAbilityExperiences(ability, userId);

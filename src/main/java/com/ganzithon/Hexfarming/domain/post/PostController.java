@@ -41,7 +41,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "작성 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @CrossOrigin(origins = "*")
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto) {
         PostResponseDto postResponseDto = postService.createPost(postRequestDto);
@@ -54,7 +54,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
         PostResponseDto postResponseDto = postService.getPost(postId);
@@ -67,7 +67,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         List<PostResponseDto> posts = postService.getAllPosts();
@@ -80,7 +80,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.PUT)
+    @CrossOrigin(origins = "*")
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
@@ -95,7 +95,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "삭제 성공", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
@@ -108,7 +108,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AverageScoreResponseDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/{postId}/average-score")
     public ResponseEntity<AverageScoreResponseDto> getAverageScore(@PathVariable Long postId) {
         // 평균 점수 계산 (남아있는 시간 기준으로 계산)
@@ -121,6 +121,7 @@ public class PostController {
     // 전체 카테고리: 조회수 기준 상위 2개 게시물 반환
     @Tag(name = "게시글")
     @Operation(summary = "전체 카테고리에서 조회수 높은 게시글 상위 2개 조회", description = "전체 카테고리에서 조회수 높은 게시글 상위 2개를 조회한다.")
+    @CrossOrigin(origins = "*")
     @GetMapping("/top")
     public List<PostResponseDto> getTop2PostsByView() {
         return postService.getTop2PostsByView();
@@ -129,6 +130,7 @@ public class PostController {
     // 카테고리별: 조회수 기준 상위 2개 게시물 반환
     @Tag(name = "게시글")
     @Operation(summary = "카테고리별 조회수 높은 게시글 상위 2개 조회", description = "특정 카테고리에서 조회수 높은 게시글 상위 2개를 조회한다.")
+    @CrossOrigin(origins = "*")
     @GetMapping("/top-by-ability/{ability}")
     public List<PostResponseDto> getTop2PostsByCategory(@PathVariable("ability") String ability) {
         return postService.getTop2PostsByCategory(Ability.valueOf(ability.toUpperCase()));
@@ -137,6 +139,7 @@ public class PostController {
     // 전체 카테고리: 마감 임박 게시글 상위 2개 반환
     @Tag(name = "게시글")
     @Operation(summary = "전체 카테고리에서 마감시간 임박한 게시글 2개 조회", description = "전체 카테고리에서 마감시간 임박한 게시글 2개를 조회한다.")
+    @CrossOrigin(origins = "*")
     @GetMapping("/expiring")
     public List<PostResponseDto> getTop2ExpiringPosts() {
         return postService.getTop2ExpiringPosts();
@@ -145,6 +148,7 @@ public class PostController {
     // 카테고리별: 마감 임박 게시글 상위 2개 반환
     @Tag(name = "게시글")
     @Operation(summary = "카테고리별 마감시간 임박한 게시글 2개 조회", description = "특정 카테고리에서 마감시간 임박한 게시글 2개를 조회한다.")
+    @CrossOrigin(origins = "*")
     @GetMapping("/expiring/{ability}")
     public List<PostResponseDto> getTop2ExpiringPostsByCategory(@PathVariable("ability") String ability) {
         Ability parsedAbility;
@@ -162,7 +166,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/searchAllPost/{searchTitleText}")
     public List<PostResponseDto> searchAllPost(@PathVariable String searchTitleText) {
         return postService.searchPost(searchTitleText, null);
@@ -174,7 +178,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/searchPost/{ability}/{searchTitleText}")
     public List<PostResponseDto> searchPost(@PathVariable Ability ability, @PathVariable String searchTitleText) {
         return postService.searchPost(searchTitleText, ability);
@@ -186,7 +190,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostTitleServerDto.class))))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getLatestPosts")
     public List<PostTitleServerDto> getLatestPosts() {
         return postService.getLatestPosts();
@@ -198,7 +202,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MyPostCountServerDto.class)))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getMyPostsCount")
     public MyPostCountServerDto getMyPostsCount() {
         return postService.getMyPostsCount();
@@ -210,7 +214,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/getMyPostsByAbility/{ability}")
     public List<PostResponseDto> getMyPostsByAbility(@PathVariable Ability ability) {
         return postService.getMyPostsByAbility(ability);
@@ -222,7 +226,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.POST)
+    @CrossOrigin(origins = "*")
     @PostMapping(value = "/uploadPicture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PictureUrlServerDto uploadPicture(
             @RequestParam()
@@ -236,7 +240,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "삭제 성공", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/deletePicture")
     public ResponseEntity<Void> deletePicture(@RequestBody DeletePictureClientDto dto) {
         postService.deletePicture(dto);

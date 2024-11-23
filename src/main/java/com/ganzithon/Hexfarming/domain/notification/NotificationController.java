@@ -31,7 +31,7 @@ public class NotificationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseNotificationCountServerDto.class)))),
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/myNotificationCount")
     public ResponseNotificationCountServerDto myNotificationCount() {
         return notificationService.myNotificationCount();
@@ -42,7 +42,7 @@ public class NotificationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseNotificationServerDto.class)))),
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*")
     @GetMapping("/myNotifications")
     public List<ResponseNotificationServerDto> myNotifications() {
         return notificationService.getMyNotifications();
@@ -53,7 +53,7 @@ public class NotificationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "삭제 성공", content = @Content(mediaType = "application/json"))
     })
-    @CrossOrigin(origins = "*", methods = RequestMethod.DELETE)
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/delete")
     public ResponseEntity<Void> delete(@RequestBody DeleteNotificationClientDto dto) {
         notificationService.delete(dto);
