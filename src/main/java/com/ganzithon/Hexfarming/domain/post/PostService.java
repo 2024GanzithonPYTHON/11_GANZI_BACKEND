@@ -314,6 +314,17 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<PostResponseDto> getPostsByAbility(Ability ability) {
+        Optional<List<Post>> postsOptional = postRepository.findAllByAbility(ability);
+        if (postsOptional.isEmpty() || postsOptional.get().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return postsOptional.get().stream()
+                .map(PostResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getMyPostsByAbility(Ability ability) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {

@@ -33,6 +33,7 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.ability = :ability AND p.isTimerOver = false ORDER BY p.timer ASC")
     List<Post> findTopByCategoryAndOrderByTimerAsc(@Param("ability") Ability ability, Pageable pageable);
     Optional<List<Post>> findAllByTitleContaining(String titleContains);
+    Optional<List<Post>> findAllByAbility(Ability ability);
     Optional<List<Post>> findAllByWriterIdAndAbility(int writerId, Ability ability);
     Optional<List<Post>> findAllByTitleContainingAndAbility(String titleContains, Ability ability);
     Optional<Post> findFirstByAbilityOrderByCreatedAtDesc(Ability ability);

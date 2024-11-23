@@ -208,16 +208,28 @@ public class PostController {
         return postService.getMyPostsCount();
     }
 
-    // 내가 쓴 게시글 카테고리 별로 조회
+    // 게시글 카테고리 별로 조회
     @Tag(name = "게시글")
-    @Operation(summary = "내가 쓴 게시글 카테고리 별 조회", description = "특정 카테고리에 내가 작성한 게시글 목록을 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
+    @Operation(summary = "게시글 카테고리 별 조회", description = "특정 카테고리에 작성된 게시글 목록을 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
     })
     @CrossOrigin(origins = "*")
-    @GetMapping("/getMyPostsByAbility/{ability}")
-    public List<PostResponseDto> getMyPostsByAbility(@PathVariable Ability ability) {
-        return postService.getMyPostsByAbility(ability);
+    @GetMapping("/getPostsByAbility/{ability}")
+    public List<PostResponseDto> getPostsByAbility(@PathVariable Ability ability) {
+        return postService.getPostsByAbility(ability);
+    }
+
+        // 내가 쓴 게시글 카테고리 별로 조회
+        @Tag(name = "게시글")
+        @Operation(summary = "내가 쓴 게시글 카테고리 별 조회", description = "특정 카테고리에 내가 작성한 게시글 목록을 반환한다.\n\nability 종류: LEADERSHIP(리더십), CREATIVITY(창의력), COMMUNICATION_SKILL(소통 역량), DILIGENCE(성실성), RESILIENCE(회복 탄력성), TENACITY(인성)")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class))))
+        })
+        @CrossOrigin(origins = "*")
+        @GetMapping("/getMyPostsByAbility/{ability}")
+        public List<PostResponseDto> getMyPostsByAbility(@PathVariable Ability ability) {
+            return postService.getMyPostsByAbility(ability);
     }
 
     // S3에 사진 올리기
