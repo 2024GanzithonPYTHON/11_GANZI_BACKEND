@@ -16,7 +16,7 @@ public class PostResponseDto {
     private int view; // 조회수
     private String writerNickname;
     private String imageBase64; // Base64로 인코딩된 이미지 데이터
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
 

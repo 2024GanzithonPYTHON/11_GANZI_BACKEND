@@ -1,5 +1,6 @@
 package com.ganzithon.Hexfarming.domain.post;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ganzithon.Hexfarming.domain.comment.Comment;
 import com.ganzithon.Hexfarming.domain.user.User;
 import com.ganzithon.Hexfarming.global.enumeration.Ability;
@@ -30,6 +31,7 @@ public class Post {
     private String writerNickname;
 
     @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(length = 5000, nullable = false)
