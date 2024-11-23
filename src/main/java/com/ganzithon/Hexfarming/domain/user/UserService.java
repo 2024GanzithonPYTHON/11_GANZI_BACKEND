@@ -116,12 +116,14 @@ public class UserService {
 
         User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
         nowUser.setPassword(dto.password());
+        userRepository.save(nowUser);
     }
 
     @Transactional
     public void changeNickname(ChangeNicknameClientDto dto) {
         User nowUser = customUserDetailsService.getCurrentUserDetails().getUser();
         nowUser.setNickname(dto.nickname());
+        userRepository.save(nowUser);
     }
 
     @Transactional
